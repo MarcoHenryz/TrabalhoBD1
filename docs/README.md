@@ -93,8 +93,8 @@ TODO
 <a id="contato"></a>
 ## Contato
 
-Marco Antonio Cotorello Henry - [Github]() [Linkedin]() - email@email.com <!-- TODO -->
-Rodrigo Macedo Silva Junior - [Github](https://github.com/rodrigomacedo-sjr) [Linkedin](https://www.linkedin.com/in/rodrigo-macedo-silva-junior/) - rodrigomacedo-sjr@gmail.com
+<p>Marco Antonio Cotorello Henry - [Github]() [Linkedin]() - email@email.com <!-- TODO --></p>
+<p>Rodrigo Macedo Silva Junior - [Github](https://github.com/rodrigomacedo-sjr) [Linkedin](https://www.linkedin.com/in/rodrigo-macedo-silva-junior/) - rodrigomacedo-sjr@gmail.com</p>
 
 Project Link: [https://github.com/MarcoHenryz/TrabalhoBD1#](https://github.com/MarcoHenryz/TrabalhoBD1#) <!-- Alterar ao alterar o nome do repositório -->
 
