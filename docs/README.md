@@ -1,11 +1,6 @@
 # Notaki
 <a id="readme-top"></a>
 
-<div align="center">
-  <a href="#">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">Notaki</h3>
 
   <p align="center">
@@ -37,7 +32,7 @@ Aplicação acadêmica para praticar modelagem e implementação de banco de dad
 
 TODO
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="tecnologias"></a>
@@ -51,7 +46,7 @@ TODO
 - shadcn/ui
 - Docker + Docker Compose
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="pre-requisitos"></a>
@@ -59,7 +54,7 @@ TODO
 
 TODO
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="instalacao"></a>
@@ -67,7 +62,7 @@ TODO
 
 TODO
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="como-rodar"></a>
@@ -75,7 +70,7 @@ TODO
 
 TODO
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="todo"></a>
@@ -92,7 +87,7 @@ TODO
 - [ ] UI para relatórios e gráficos
 
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="contato"></a>
@@ -103,7 +98,7 @@ Rodrigo Macedo Silva Junior - [Github](https://github.com/rodrigomacedo-sjr) [Li
 
 Project Link: [https://github.com/MarcoHenryz/TrabalhoBD1#](https://github.com/MarcoHenryz/TrabalhoBD1#) <!-- Alterar ao alterar o nome do repositório -->
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
 
 <a id="reconhecimentos"></a>
@@ -111,4 +106,4 @@ Project Link: [https://github.com/MarcoHenryz/TrabalhoBD1#](https://github.com/M
 
 * [Professor Dr. Anderson Paula Avila Santos](anderson.avila@uel.b)
 
-<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>
+<p align="right"><a href="#readme-top">voltar ao topo</a></p>
