@@ -93,10 +93,8 @@ TODO
 <a id="contato"></a>
 ## Contato
 
-<p>Marco Antonio Cotorello Henry - [Github]() [Linkedin]() - email@email.com <!-- TODO --></p>
-<p>Rodrigo Macedo Silva Junior - [Github](https://github.com/rodrigomacedo-sjr) [Linkedin](https://www.linkedin.com/in/rodrigo-macedo-silva-junior/) - rodrigomacedo-sjr@gmail.com</p>
-
-Project Link: [https://github.com/MarcoHenryz/TrabalhoBD1#](https://github.com/MarcoHenryz/TrabalhoBD1#) <!-- Alterar ao alterar o nome do repositório -->
+<p>Marco Antonio Cotorello Henry - <a href="https://github.com/MarcoHenryz"></a> - <a href="marcohneyr@gmail.com">marcohneyr@gmail.com</a>
+<p>Rodrigo Macedo Silva Junior - <a href="https://github.com/rodrigomacedo-sjr">Github</a> <a href="https://www.linkedin.com/in/rodrigo-macedo-silva-junior/">Linkedin<\a> - <a href="mailto:rodrigomacedo-sjr@gmail.com">rodrigomacedo-sjr@gmail.com</a></p>
 
 <p align="right"><a href="#readme-top">voltar ao topo</a></p>
 
@@ -104,6 +102,6 @@ Project Link: [https://github.com/MarcoHenryz/TrabalhoBD1#](https://github.com/M
 <a id="reconhecimentos"></a>
 ## Reconhecimentos
 
-* [Professor Dr. Anderson Paula Avila Santos](anderson.avila@uel.b)
+* <a href="mailto:anderson.avila@uel.b">Professor Dr. Anderson Paula Avila Santos</a>
 
 <p align="right"><a href="#readme-top">voltar ao topo</a></p>
