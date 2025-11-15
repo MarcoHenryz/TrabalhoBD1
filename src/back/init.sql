@@ -12,5 +12,22 @@ CREATE TABLE IF NOT EXISTS alunos (
     media NUMERIC(5,2) NOT NULL DEFAULT 0,
     data_inicio DATE NOT NULL,
     data_conclusao DATE,
+    usuario_id UUID NOT NULL UNIQUE REFERENCES usuarios(id) ON DELETE CASCADE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS avaliacoes (
+    id UUID PRIMARY KEY,
+    descricao TEXT NOT NULL,
+    data DATE NOT NULL,
+    horario TIME NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS avaliacao_alunos (
+    avaliacao_id UUID REFERENCES avaliacoes(id) ON DELETE CASCADE,
+    aluno_id UUID REFERENCES alunos(id) ON DELETE CASCADE,
+    nota NUMERIC(5,2),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (avaliacao_id, aluno_id)
 );

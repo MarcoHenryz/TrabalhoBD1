@@ -1,7 +1,9 @@
 package com.uel.service;
 
+import com.uel.entity.Aluno;
 import com.uel.entity.Usuario;
 import com.uel.repository.UsuarioRepository;
+import com.uel.repository.AlunoRepository;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.Base64;
@@ -13,11 +15,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UsuarioService {
   private final UsuarioRepository repository;
+  private final AlunoRepository alunoRepository;
   private final BCryptPasswordEncoder encoder;
   private final SecureRandom secureRandom = new SecureRandom();
 
-  public UsuarioService(UsuarioRepository repository, BCryptPasswordEncoder encoder) {
+  public UsuarioService(UsuarioRepository repository, AlunoRepository alunoRepository, BCryptPasswordEncoder encoder) {
     this.repository = repository;
+    this.alunoRepository = alunoRepository;
     this.encoder = encoder;
   }
 
@@ -56,6 +60,10 @@ public class UsuarioService {
   }
 
   public void deletar(UUID id) throws SQLException {
+    Aluno aluno = alunoRepository.buscarPorUsuarioId(id);
+    if (aluno != null) {
+      alunoRepository.deletar(aluno.getId());
+    }
     boolean removido = repository.deletar(id);
     if (!removido) {
       throw new IllegalArgumentException("Usuário não encontrado");

@@ -34,7 +34,16 @@ public class UsuarioRepository {
   }
 
   public Usuario buscarPorId(UUID targetId) throws SQLException {
-    String sql = "SELECT id, email, salt, hash_senha FROM usuarios WHERE id = ?";
+    String sql = """
+      SELECT u.id,
+             u.email,
+             u.salt,
+             u.hash_senha,
+             a.id AS aluno_id
+        FROM usuarios u
+        LEFT JOIN alunos a ON a.usuario_id = u.id
+       WHERE u.id = ?
+      """;
 
     try (Connection conn = dataSource.getConnection(); PreparedStatement pst = conn.prepareStatement(sql)) {
       pst.setObject(1, targetId);
@@ -50,7 +59,16 @@ public class UsuarioRepository {
   }
 
   public List<Usuario> listarTodos() throws SQLException {
-    String sql = "SELECT id, email, salt, hash_senha FROM usuarios ORDER BY email";
+    String sql = """
+      SELECT u.id,
+             u.email,
+             u.salt,
+             u.hash_senha,
+             a.id AS aluno_id
+        FROM usuarios u
+        LEFT JOIN alunos a ON a.usuario_id = u.id
+    ORDER BY u.email
+      """;
     List<Usuario> usuarios = new ArrayList<>();
 
     try (
@@ -93,6 +111,12 @@ public class UsuarioRepository {
     String email = rs.getString("email");
     String salt = rs.getString("salt");
     String hashSenha = rs.getString("hash_senha");
-    return new Usuario(id, email, salt, hashSenha);
+    UUID alunoId = null;
+    try {
+      alunoId = rs.getObject("aluno_id", UUID.class);
+    } catch (SQLException ignored) {}
+    Usuario usuario = new Usuario(id, email, salt, hashSenha);
+    usuario.setAlunoId(alunoId);
+    return usuario;
   }
 }

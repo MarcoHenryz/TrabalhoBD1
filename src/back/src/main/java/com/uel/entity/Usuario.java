@@ -8,6 +8,7 @@ public class Usuario {
   private String email;
   private String salt;
   private String hashSenha;
+  private UUID alunoId;
 
   public Usuario() {}
 
@@ -50,5 +51,13 @@ public class Usuario {
 
   public void setHashSenha(String hashSenha) {
     this.hashSenha = hashSenha;
+  }
+
+  public UUID getAlunoId() {
+    return alunoId;
+  }
+
+  public void setAlunoId(UUID alunoId) {
+    this.alunoId = alunoId;
   }
 }

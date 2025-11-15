@@ -10,15 +10,21 @@ public class Aluno {
   private BigDecimal media;
   private LocalDate dataInicio;
   private LocalDate dataConclusao;
+  private Usuario usuario;
 
   public Aluno() {}
 
   public Aluno(UUID id, String matricula, BigDecimal media, LocalDate dataInicio, LocalDate dataConclusao) {
+    this(id, matricula, media, dataInicio, dataConclusao, null);
+  }
+
+  public Aluno(UUID id, String matricula, BigDecimal media, LocalDate dataInicio, LocalDate dataConclusao, Usuario usuario) {
     this.id = id;
     this.matricula = matricula;
     this.media = media;
     this.dataInicio = dataInicio;
     this.dataConclusao = dataConclusao;
+    this.usuario = usuario;
   }
 
   public UUID getId() {
@@ -59,5 +65,17 @@ public class Aluno {
 
   public void setDataConclusao(LocalDate dataConclusao) {
     this.dataConclusao = dataConclusao;
+  }
+
+  public Usuario getUsuario() {
+    return usuario;
+  }
+
+  public void setUsuario(Usuario usuario) {
+    this.usuario = usuario;
+  }
+
+  public UUID getUsuarioId() {
+    return usuario != null ? usuario.getId() : null;
   }
 }

@@ -31,10 +31,12 @@ public class AlunoController {
   public ResponseEntity<Aluno> criar(@RequestBody AlunoRequest request) {
     validarCriacao(request);
     try {
-      Aluno aluno = alunoService.criar(request.matricula(), request.dataInicio(), request.dataConclusao());
+      Aluno aluno = alunoService.criar(request.matricula(), request.dataInicio(), request.dataConclusao(), request.usuarioId());
       return ResponseEntity.status(HttpStatus.CREATED).body(aluno);
     } catch (SQLException e) {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao criar aluno", e);
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
     }
   }
 
@@ -85,8 +87,14 @@ public class AlunoController {
   }
 
   private void validarCriacao(AlunoRequest request) {
-    if (request == null || request.matricula() == null || request.matricula().isBlank() || request.dataInicio() == null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Matrícula e data de início são obrigatórias");
+    boolean usuarioInvalido = request == null || request.usuarioId() == null;
+    boolean matriculaInvalida = request == null || request.matricula() == null || request.matricula().isBlank();
+    boolean dataInicioInvalida = request == null || request.dataInicio() == null;
+    if (usuarioInvalido || matriculaInvalida || dataInicioInvalida) {
+      throw new ResponseStatusException(
+        HttpStatus.BAD_REQUEST,
+        "Matrícula, data de início e usuário são obrigatórios"
+      );
     }
   }
 
@@ -102,5 +110,5 @@ public class AlunoController {
     }
   }
 
-  public record AlunoRequest(String matricula, LocalDate dataInicio, LocalDate dataConclusao) {}
+  public record AlunoRequest(String matricula, LocalDate dataInicio, LocalDate dataConclusao, UUID usuarioId) {}
 }
