@@ -1,4 +1,4 @@
-package com.uel.api_notaki;
+package com.uel;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

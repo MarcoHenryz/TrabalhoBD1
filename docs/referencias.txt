@@ -38,3 +38,6 @@ https://www.postgresql.org/docs/current/sql-analyze.html
 https://www.postgresql.org/docs/current/performance-tips.html
 https://hub.docker.com/_/postgres/
 https://docs.docker.com/guides/pre-seeding/
+https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-cors.html
+https://docs.spring.io/spring-security/reference/servlet/authorization/authorize-http-requests.html
+https://docs.docker.com/compose/
