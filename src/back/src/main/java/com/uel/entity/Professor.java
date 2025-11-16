@@ -8,11 +8,11 @@ public class Professor {
     private String area;
     private Usuario usuario;
 
-    private Professor() {
+    public Professor() {
     }
 
-    public Professor(String area, Usuario usuario) {
-        this.id = UUID.randomUUID();
+    public Professor(UUID id, String area, Usuario usuario) {
+        this.id = id;
         this.area = area;
         this.usuario = usuario;
     }
@@ -33,11 +33,11 @@ public class Professor {
         this.area = area;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public UUID getUsuarioId() {
+        return usuario != null ? usuario.getId() : null;
     }
 
-    public void setUsuario(Usuario usuario) {
+    public void setUsuarioId(Usuario usuario) {
         this.usuario = usuario;
     }
 
