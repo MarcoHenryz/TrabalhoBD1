@@ -1,4 +1,4 @@
-FROM maven:3.9.9-eclipse-temurin-25 AS builder
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 WORKDIR /workspace
 
 COPY pom.xml .
@@ -11,7 +11,7 @@ COPY src ./src
 
 RUN ./mvnw -q -DskipTests clean package
 
-FROM eclipse-temurin:25-jre
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 COPY --from=builder /workspace/target/api-notaki-0.0.1-SNAPSHOT.jar app.jar

@@ -9,8 +9,10 @@ public class Usuario {
   private String salt;
   private String hashSenha;
   private UUID alunoId;
+  private UUID professorId;
 
-  public Usuario() {}
+  public Usuario() {
+  }
 
   public Usuario(UUID id, String email, String salt, String hashSenha) {
     this.id = id;
@@ -59,5 +61,13 @@ public class Usuario {
 
   public void setAlunoId(UUID alunoId) {
     this.alunoId = alunoId;
+  }
+
+  public UUID getProfessorId() {
+    return professorId;
+  }
+
+  public void setProfessorId(UUID professorId) {
+    this.professorId = professorId;
   }
 }
