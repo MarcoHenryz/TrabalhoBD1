@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-ApiNotakiApplication<api-notaki>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.uel.ApiNotakiApplication",
+      "projectName": "api-notaki",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
