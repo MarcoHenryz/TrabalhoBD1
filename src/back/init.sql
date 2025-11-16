@@ -39,3 +39,30 @@ CREATE TABLE IF NOT EXISTS avaliacao_alunos (
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (avaliacao_id, aluno_id)
 );
+
+CREATE TABLE IF NOT EXISTS questoes (
+    questao_id UUID PRIMARY KEY,
+    enunciado TEXT NOT NULL,
+    tema VARCHAR(30) NOT NULL,
+    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('MULTIPLA_ESCOLHA','DISSERTATIVA','VOUF' )),
+    dificuldade VARCHAR(30) NOT NULL CHECK (dificuldade IN ('FACIL', 'MEDIO', 'DIFICIL'))
+    resposta_esperada TEXT,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    professor_id NOT NULL UNIQUE REFERENCES professores(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS alternativas (
+    questao_id UUID REFERENCES questoes(id) ON DELETE CASCADE,
+    id UUID PRIMARY KEY,
+    verdadeiro BOOLEAN NOT NULL,
+    alternativa TEXT NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS vouf(
+    id UUID PRIMARY KEY,
+    item TEXT NOT NULL,
+    verdadeiro BOOLEAN NOT NULL,
+    questao_id UUID REFERENCES questao(id) ON DELETE CASCADE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
