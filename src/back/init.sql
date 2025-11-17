@@ -44,25 +44,59 @@ CREATE TABLE IF NOT EXISTS questoes (
     questao_id UUID PRIMARY KEY,
     enunciado TEXT NOT NULL,
     tema VARCHAR(30) NOT NULL,
-    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('MULTIPLA_ESCOLHA','DISSERTATIVA','VOUF' )),
+    tipo VARCHAR(50) NOT NULL CHECK (tipo IN ('MULTIPLA_ESCOLHA','DISSERTATIVA','VOUF')),
     dificuldade VARCHAR(30) NOT NULL CHECK (dificuldade IN ('FACIL', 'MEDIO', 'DIFICIL')),
     resposta_esperada TEXT,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    professor_id UUID NOT NULL REFERENCES professores(id) ON DELETE SET NULL
+    professor_id UUID REFERENCES professores(id) ON DELETE SET NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS alternativas (
-    questao_id UUID REFERENCES questoes(questao_id) ON DELETE CASCADE,
     id UUID PRIMARY KEY,
-    verdadeiro BOOLEAN NOT NULL,
+    questao_id UUID NOT NULL REFERENCES questoes(questao_id) ON DELETE CASCADE,
     alternativa TEXT NOT NULL,
+    verdadeiro BOOLEAN NOT NULL,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS vouf(
+CREATE TABLE IF NOT EXISTS vouf (
     id UUID PRIMARY KEY,
     item TEXT NOT NULL,
     verdadeiro BOOLEAN NOT NULL,
-    questao_id UUID REFERENCES questoes(questao_id) ON DELETE CASCADE,
+    questao_id UUID NOT NULL REFERENCES questoes(questao_id) ON DELETE CASCADE,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS avaliacao_questoes (
+    avaliacao_id UUID NOT NULL REFERENCES avaliacoes(id) ON DELETE CASCADE,
+    questao_id UUID NOT NULL REFERENCES questoes(questao_id) ON DELETE CASCADE,
+    peso NUMERIC(5,2) NOT NULL DEFAULT 1.00,
+    ordem INTEGER NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (avaliacao_id, questao_id)
+);
+
+CREATE TABLE IF NOT EXISTS respostas_alunos (
+    id UUID PRIMARY KEY,
+    avaliacao_id UUID NOT NULL,
+    aluno_id UUID NOT NULL,
+    questao_id UUID NOT NULL,
+    
+    alternativa_escolhida_id UUID REFERENCES alternativas(id) ON DELETE SET NULL,
+    
+    vouf_item_id UUID REFERENCES vouf(id) ON DELETE SET NULL,
+    vouf_resposta BOOLEAN,
+    
+    resposta_texto TEXT,
+    
+    nota NUMERIC(5,2),
+    
+    respondido_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    corrigido BOOLEAN DEFAULT FALSE,
+    
+    FOREIGN KEY (avaliacao_id, aluno_id) REFERENCES avaliacao_alunos(avaliacao_id, aluno_id) ON DELETE CASCADE,
+    FOREIGN KEY (avaliacao_id, questao_id) REFERENCES avaliacao_questoes(avaliacao_id, questao_id) ON DELETE CASCADE
+);
+
+
+

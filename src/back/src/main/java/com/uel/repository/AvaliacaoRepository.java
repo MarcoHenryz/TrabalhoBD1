@@ -68,10 +68,9 @@ public class AvaliacaoRepository {
     String sql = "SELECT id, descricao, data, horario FROM avaliacoes ORDER BY data DESC, horario DESC";
     List<Avaliacao> avaliacoes = new ArrayList<>();
     try (
-      Connection conn = dataSource.getConnection();
-      Statement st = conn.createStatement();
-      ResultSet rs = st.executeQuery(sql)
-    ) {
+        Connection conn = dataSource.getConnection();
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(sql)) {
       while (rs.next()) {
         Avaliacao avaliacao = map(rs);
         avaliacao.setParticipacoes(buscarParticipacoes(avaliacao.getId()));
@@ -113,7 +112,26 @@ public class AvaliacaoRepository {
     }
   }
 
-  private void salvarParticipacoes(Connection conn, UUID avaliacaoId, List<AvaliacaoParticipacao> participacoes) throws SQLException {
+  public void associarAluno(UUID avaliacaoId, UUID alunoId) throws SQLException {
+    String sql = "INSERT INTO avaliacao_alunos (avaliacao_id, aluno_id, nota) VALUES (?, ?, NULL)";
+    try (Connection conn = dataSource.getConnection(); PreparedStatement pst = conn.prepareStatement(sql)) {
+      pst.setObject(1, avaliacaoId);
+      pst.setObject(2, alunoId);
+      pst.executeUpdate();
+    }
+  }
+
+  public void desassociarAluno(UUID avaliacaoId, UUID alunoId) throws SQLException {
+    String sql = "DELETE FROM avaliacao_alunos WHERE avaliacao_id = ? AND aluno_id = ?";
+    try (Connection conn = dataSource.getConnection(); PreparedStatement pst = conn.prepareStatement(sql)) {
+      pst.setObject(1, avaliacaoId);
+      pst.setObject(2, alunoId);
+      pst.executeUpdate();
+    }
+  }
+
+  private void salvarParticipacoes(Connection conn, UUID avaliacaoId, List<AvaliacaoParticipacao> participacoes)
+      throws SQLException {
     if (participacoes == null || participacoes.isEmpty()) {
       return;
     }
@@ -143,23 +161,23 @@ public class AvaliacaoRepository {
 
   private List<AvaliacaoParticipacao> buscarParticipacoes(UUID avaliacaoId) throws SQLException {
     String sql = """
-      SELECT aa.avaliacao_id,
-             aa.aluno_id,
-             aa.nota,
-             a.matricula,
-             a.media,
-             a.data_inicio,
-             a.data_conclusao,
-             a.usuario_id,
-             u.email      AS usuario_email,
-             u.salt       AS usuario_salt,
-             u.hash_senha AS usuario_hash
-        FROM avaliacao_alunos aa
-        JOIN alunos a ON a.id = aa.aluno_id
-        JOIN usuarios u ON u.id = a.usuario_id
-       WHERE aa.avaliacao_id = ?
-    ORDER BY a.matricula
-      """;
+          SELECT aa.avaliacao_id,
+                 aa.aluno_id,
+                 aa.nota,
+                 a.matricula,
+                 a.media,
+                 a.data_inicio,
+                 a.data_conclusao,
+                 a.usuario_id,
+                 u.email      AS usuario_email,
+                 u.salt       AS usuario_salt,
+                 u.hash_senha AS usuario_hash
+            FROM avaliacao_alunos aa
+            JOIN alunos a ON a.id = aa.aluno_id
+            JOIN usuarios u ON u.id = a.usuario_id
+           WHERE aa.avaliacao_id = ?
+        ORDER BY a.matricula
+          """;
     List<AvaliacaoParticipacao> participacoes = new ArrayList<>();
     try (Connection conn = dataSource.getConnection(); PreparedStatement pst = conn.prepareStatement(sql)) {
       pst.setObject(1, avaliacaoId);
@@ -186,15 +204,15 @@ public class AvaliacaoRepository {
     AvaliacaoParticipacao participacao = new AvaliacaoParticipacao(avaliacaoId, alunoId, rs.getBigDecimal("nota"));
 
     UUID usuarioId = rs.getObject("usuario_id", UUID.class);
-    Usuario usuario = new Usuario(usuarioId, rs.getString("usuario_email"), rs.getString("usuario_salt"), rs.getString("usuario_hash"));
+    Usuario usuario = new Usuario(usuarioId, rs.getString("usuario_email"), rs.getString("usuario_salt"),
+        rs.getString("usuario_hash"));
     Aluno aluno = new Aluno(
-      alunoId,
-      rs.getString("matricula"),
-      rs.getBigDecimal("media"),
-      rs.getObject("data_inicio", LocalDate.class),
-      rs.getObject("data_conclusao", LocalDate.class),
-      usuario
-    );
+        alunoId,
+        rs.getString("matricula"),
+        rs.getBigDecimal("media"),
+        rs.getObject("data_inicio", LocalDate.class),
+        rs.getObject("data_conclusao", LocalDate.class),
+        usuario);
 
     participacao.setAluno(aluno);
     return participacao;

@@ -61,6 +61,27 @@ public class VoufRepository {
         return itens;
     }
 
+    public Vouf buscarPorId(UUID id) throws SQLException {
+        String sql = """
+                  SELECT id, item, verdadeiro, questao_id
+                  FROM vouf
+                  WHERE id = ?
+                """;
+
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setObject(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return mapearVouf(rs);
+                }
+            }
+        }
+        return null;
+    }
+
     public void deletarPorQuestaoId(UUID questaoId) throws SQLException {
         String sql = "DELETE FROM vouf WHERE questao_id = ?";
 

@@ -28,7 +28,7 @@ public class AvaliacaoService {
   }
 
   public Avaliacao criar(String descricao, LocalDate data, LocalTime horario, List<AvaliacaoParticipacao> participacoes)
-    throws SQLException {
+      throws SQLException {
     Avaliacao avaliacao = new Avaliacao(UUID.randomUUID(), descricao, data, horario);
     avaliacao.setParticipacoes(prepararParticipacoes(avaliacao.getId(), participacoes));
     avaliacaoRepository.criar(avaliacao);
@@ -44,12 +44,11 @@ public class AvaliacaoService {
   }
 
   public Avaliacao atualizar(
-    UUID id,
-    String descricao,
-    LocalDate data,
-    LocalTime horario,
-    List<AvaliacaoParticipacao> novasParticipacoes
-  ) throws SQLException {
+      UUID id,
+      String descricao,
+      LocalDate data,
+      LocalTime horario,
+      List<AvaliacaoParticipacao> novasParticipacoes) throws SQLException {
     Avaliacao existente = avaliacaoRepository.buscarPorId(id);
     if (existente == null) {
       throw new IllegalArgumentException("Avaliação não encontrada");
@@ -79,8 +78,56 @@ public class AvaliacaoService {
     }
   }
 
+  public void associarAluno(UUID avaliacaoId, UUID alunoId) throws SQLException {
+    // Verificar se avaliação existe
+    Avaliacao avaliacao = avaliacaoRepository.buscarPorId(avaliacaoId);
+    if (avaliacao == null) {
+      throw new IllegalArgumentException("Avaliação não encontrada");
+    }
+
+    // Verificar se aluno existe
+    Aluno aluno = alunoRepository.buscarPorId(alunoId);
+    if (aluno == null) {
+      throw new IllegalArgumentException("Aluno não encontrado");
+    }
+
+    // Verificar se já está associado
+    for (AvaliacaoParticipacao p : avaliacao.getParticipacoes()) {
+      if (p.getAlunoId().equals(alunoId)) {
+        throw new IllegalArgumentException("Aluno já está associado a esta avaliação");
+      }
+    }
+
+    // Associar
+    avaliacaoRepository.associarAluno(avaliacaoId, alunoId);
+  }
+
+  public void desassociarAluno(UUID avaliacaoId, UUID alunoId) throws SQLException {
+    // Verificar se avaliação existe
+    Avaliacao avaliacao = avaliacaoRepository.buscarPorId(avaliacaoId);
+    if (avaliacao == null) {
+      throw new IllegalArgumentException("Avaliação não encontrada");
+    }
+
+    // Verificar se aluno está associado
+    boolean encontrado = false;
+    for (AvaliacaoParticipacao p : avaliacao.getParticipacoes()) {
+      if (p.getAlunoId().equals(alunoId)) {
+        encontrado = true;
+        break;
+      }
+    }
+
+    if (!encontrado) {
+      throw new IllegalArgumentException("Aluno não está associado a esta avaliação");
+    }
+
+    // Desassociar
+    avaliacaoRepository.desassociarAluno(avaliacaoId, alunoId);
+  }
+
   private List<AvaliacaoParticipacao> prepararParticipacoes(UUID avaliacaoId, List<AvaliacaoParticipacao> participacoes)
-    throws SQLException {
+      throws SQLException {
     if (participacoes == null) {
       return new ArrayList<>();
     }

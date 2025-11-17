@@ -36,11 +36,10 @@ public class AvaliacaoController {
     validarCriacao(request);
     try {
       Avaliacao avaliacao = avaliacaoService.criar(
-        request.descricao(),
-        request.data(),
-        request.horario(),
-        converterParticipacoes(request.participantes())
-      );
+          request.descricao(),
+          request.data(),
+          request.horario(),
+          converterParticipacoes(request.participantes()));
       return ResponseEntity.status(HttpStatus.CREATED).body(avaliacao);
     } catch (IllegalArgumentException e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
@@ -76,12 +75,11 @@ public class AvaliacaoController {
     validarAtualizacao(request);
     try {
       return avaliacaoService.atualizar(
-        id,
-        request.descricao(),
-        request.data(),
-        request.horario(),
-        converterParticipacoes(request.participantes())
-      );
+          id,
+          request.descricao(),
+          request.data(),
+          request.horario(),
+          converterParticipacoes(request.participantes()));
     } catch (IllegalArgumentException e) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
     } catch (SQLException e) {
@@ -101,8 +99,41 @@ public class AvaliacaoController {
     }
   }
 
+  @PostMapping("/{id}/alunos")
+  public ResponseEntity<Void> associarAluno(
+      @PathVariable UUID id,
+      @RequestBody AssociarAlunoRequest request) {
+    if (request == null || request.alunoId() == null) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID do aluno é obrigatório");
+    }
+
+    try {
+      avaliacaoService.associarAluno(id, request.alunoId());
+      return ResponseEntity.status(HttpStatus.CREATED).build();
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
+    } catch (SQLException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao associar aluno", e);
+    }
+  }
+
+  @DeleteMapping("/{id}/alunos/{alunoId}")
+  public ResponseEntity<Void> desassociarAluno(
+      @PathVariable UUID id,
+      @PathVariable UUID alunoId) {
+    try {
+      avaliacaoService.desassociarAluno(id, alunoId);
+      return ResponseEntity.noContent().build();
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+    } catch (SQLException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao desassociar aluno", e);
+    }
+  }
+
   private void validarCriacao(AvaliacaoRequest request) {
-    if (request == null || request.descricao() == null || request.descricao().isBlank() || request.data() == null || request.horario() == null) {
+    if (request == null || request.descricao() == null || request.descricao().isBlank() || request.data() == null
+        || request.horario() == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Descrição, data e horário são obrigatórios");
     }
   }
@@ -135,11 +166,15 @@ public class AvaliacaoController {
   }
 
   public record AvaliacaoRequest(
-    String descricao,
-    LocalDate data,
-    LocalTime horario,
-    List<ParticipacaoRequest> participantes
-  ) {}
+      String descricao,
+      LocalDate data,
+      LocalTime horario,
+      List<ParticipacaoRequest> participantes) {
+  }
 
-  public record ParticipacaoRequest(UUID alunoId, BigDecimal nota) {}
+  public record ParticipacaoRequest(UUID alunoId, BigDecimal nota) {
+  }
+
+  public record AssociarAlunoRequest(UUID alunoId) {
+  }
 }
