@@ -4,6 +4,7 @@ import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { CriarQuestaoForm } from "@/components/forms/CriarQuestaoForm";
 import { ListarQuestoes } from "@/components/forms/ListarQuestoes";
+import { NovaAvaliacaoForm } from "@/components/forms/NovaAvaliacaoForm";
 import { useState } from "react";
 
 export type ProfessorSection = "questoes" | "provas" | "relatorios";
@@ -48,6 +49,12 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
     setTimeout(() => setSuccessMessage(null), 5000);
   };
 
+  const handleAvaliacaoCriada = () => {
+    setSuccessMessage("Avaliação criada com sucesso!");
+    setErrorMessage(null);
+    setTimeout(() => setSuccessMessage(null), 5000);
+  };
+
   return (
     <DashboardLayout
       title="Painel do Professor"
@@ -76,6 +83,20 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
             onError={handleError} 
             refreshTrigger={refreshTrigger}
           />
+        </div>
+      ) : activeSection === "provas" ? (
+        <div className="space-y-6">
+          {successMessage && (
+            <div className="p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
+              {errorMessage}
+            </div>
+          )}
+          <NovaAvaliacaoForm onSuccess={handleAvaliacaoCriada} onError={handleError} />
         </div>
       ) : (
         <Card className="w-full">

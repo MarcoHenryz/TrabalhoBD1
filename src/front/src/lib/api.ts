@@ -110,3 +110,60 @@ export async function deletarQuestao(id: string): Promise<void> {
     throw new Error(`Erro ao deletar questão: ${res.statusText} - ${errorText}`);
   }
 }
+
+// Interfaces para Avaliação
+export interface Avaliacao {
+  id: string;
+  descricao: string;
+  data: string; // LocalDate format: "YYYY-MM-DD"
+  horario: string; // LocalTime format: "HH:mm"
+}
+
+export interface AvaliacaoRequest {
+  descricao: string;
+  data: string; // "YYYY-MM-DD"
+  horario: string; // "HH:mm"
+  participantes?: null; // Opcional, não usado na criação inicial
+}
+
+export interface AdicionarQuestaoAvaliacaoRequest {
+  questaoId: string;
+  peso?: number; // Opcional, default 1.0
+  ordem?: number; // Opcional
+}
+
+// Funções para Avaliação
+export async function criarAvaliacao(request: AvaliacaoRequest): Promise<Avaliacao> {
+  const res = await fetch(`${API_URL}/avaliacoes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao criar avaliação: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
+}
+
+export async function adicionarQuestaoAvaliacao(
+  avaliacaoId: string,
+  request: AdicionarQuestaoAvaliacaoRequest
+): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${avaliacaoId}/questoes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao adicionar questão à avaliação: ${res.statusText} - ${errorText}`);
+  }
+}
