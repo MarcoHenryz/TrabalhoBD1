@@ -3,6 +3,7 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { CriarQuestaoForm } from "@/components/forms/CriarQuestaoForm";
+import { ListarQuestoes } from "@/components/forms/ListarQuestoes";
 import { useState } from "react";
 
 export type ProfessorSection = "questoes" | "provas" | "relatorios";
@@ -26,16 +27,25 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
   const currentSection = navItems.find(item => item.key === activeSection)!;
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const handleSuccess = () => {
     setSuccessMessage("Questão criada com sucesso!");
     setErrorMessage(null);
+    setRefreshTrigger(prev => prev + 1); // Trigger para recarregar a lista
     setTimeout(() => setSuccessMessage(null), 5000);
   };
 
   const handleError = (error: string) => {
     setErrorMessage(error);
     setSuccessMessage(null);
+  };
+
+  const handleQuestaoDeletada = () => {
+    setSuccessMessage("Questão excluída com sucesso!");
+    setErrorMessage(null);
+    setRefreshTrigger(prev => prev + 1); // Trigger para recarregar a lista
+    setTimeout(() => setSuccessMessage(null), 5000);
   };
 
   return (
@@ -49,7 +59,7 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
       onLogout={onLogout}
     >
       {activeSection === "questoes" ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {successMessage && (
             <div className="p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
               {successMessage}
@@ -61,6 +71,11 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
             </div>
           )}
           <CriarQuestaoForm professorId={professorId} onSuccess={handleSuccess} onError={handleError} />
+          <ListarQuestoes 
+            onQuestaoDeletada={handleQuestaoDeletada} 
+            onError={handleError} 
+            refreshTrigger={refreshTrigger}
+          />
         </div>
       ) : (
         <Card className="w-full">

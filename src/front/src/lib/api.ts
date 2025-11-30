@@ -92,3 +92,21 @@ export async function criarQuestao(request: QuestaoRequest): Promise<Questao> {
 
   return res.json();
 }
+
+export async function listarQuestoes(): Promise<Questao[]> {
+  return fetchFromBackend("/questoes");
+}
+
+export async function deletarQuestao(id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/questoes/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao deletar questão: ${res.statusText} - ${errorText}`);
+  }
+}
