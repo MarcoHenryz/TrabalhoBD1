@@ -7,6 +7,40 @@ export interface Usuario {
   professorId?: string | null;
 }
 
+export type TipoQuestao = "MULTIPLA_ESCOLHA" | "VOUF" | "DISSERTATIVA";
+export type Dificuldade = "FACIL" | "MEDIO" | "DIFICIL";
+
+export interface AlternativaRequest {
+  alternativa: string;
+  verdadeiro: boolean;
+}
+
+export interface VoufRequest {
+  item: string;
+  verdadeiro: boolean;
+}
+
+export interface QuestaoRequest {
+  enunciado: string;
+  tema: string;
+  tipo: TipoQuestao;
+  dificuldade: Dificuldade;
+  respostaEsperada?: string | null;
+  professorId: string;
+  alternativas?: AlternativaRequest[] | null;
+  itensVouf?: VoufRequest[] | null;
+}
+
+export interface Questao {
+  id: string;
+  enunciado: string;
+  tema: string;
+  tipo: TipoQuestao;
+  dificuldade: Dificuldade;
+  respostaEsperada?: string | null;
+  professorId: string;
+}
+
 export async function fetchFromBackend(endpoint: string, options: RequestInit = {}) {
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
@@ -40,4 +74,114 @@ export async function login(email: string, senha: string): Promise<Usuario> {
   }
 
   return res.json();
+}
+
+export async function criarQuestao(request: QuestaoRequest): Promise<Questao> {
+  const res = await fetch(`${API_URL}/questoes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao criar questão: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
+}
+
+export async function listarQuestoes(): Promise<Questao[]> {
+  return fetchFromBackend("/questoes");
+}
+
+export async function deletarQuestao(id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/questoes/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao deletar questão: ${res.statusText} - ${errorText}`);
+  }
+}
+
+// Interfaces para Avaliação
+export interface Avaliacao {
+  id: string;
+  descricao: string;
+  data: string; // LocalDate format: "YYYY-MM-DD"
+  horario: string; // LocalTime format: "HH:mm"
+}
+
+export interface AvaliacaoRequest {
+  descricao: string;
+  data: string; // "YYYY-MM-DD"
+  horario: string; // "HH:mm"
+  participantes?: null; // Opcional, não usado na criação inicial
+}
+
+export interface AdicionarQuestaoAvaliacaoRequest {
+  questaoId: string;
+  peso?: number; // Opcional, default 1.0
+  ordem?: number; // Opcional
+}
+
+// Funções para Avaliação
+export async function criarAvaliacao(request: AvaliacaoRequest): Promise<Avaliacao> {
+  const res = await fetch(`${API_URL}/avaliacoes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao criar avaliação: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
+}
+
+export async function adicionarQuestaoAvaliacao(
+  avaliacaoId: string,
+  request: AdicionarQuestaoAvaliacaoRequest
+): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${avaliacaoId}/questoes`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao adicionar questão à avaliação: ${res.statusText} - ${errorText}`);
+  }
+}
+
+export async function listarAvaliacoes(): Promise<Avaliacao[]> {
+  return fetchFromBackend("/avaliacoes");
+}
+
+export async function deletarAvaliacao(id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao deletar avaliação: ${res.statusText} - ${errorText}`);
+  }
 }
