@@ -41,7 +41,7 @@ export interface Questao {
   professorId: string;
 }
 
-export async function fetchFromBackend(endpoint: string, options: RequestInit = {}) {
+export async function fetchFromBackend<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -109,6 +109,56 @@ export async function deletarQuestao(id: string): Promise<void> {
     const errorText = await res.text();
     throw new Error(`Erro ao deletar questão: ${res.statusText} - ${errorText}`);
   }
+}
+
+export async function buscarQuestaoPorId(id: string): Promise<Questao> {
+  return fetchFromBackend(`/questoes/${id}`);
+}
+
+export interface AlternativaResponse {
+  alternativa: string;
+  verdadeiro: boolean;
+}
+
+export interface VoufResponse {
+  item: string;
+  verdadeiro: boolean;
+}
+
+export interface QuestaoCompleta extends Questao {
+  alternativas?: AlternativaResponse[];
+  itensVouf?: VoufResponse[];
+}
+
+export async function buscarQuestaoCompleta(id: string): Promise<QuestaoCompleta> {
+  const [questao, alternativas, itensVouf] = await Promise.all([
+    buscarQuestaoPorId(id),
+    fetchFromBackend<AlternativaResponse[]>(`/questoes/${id}/alternativas`).catch(() => [] as AlternativaResponse[]),
+    fetchFromBackend<VoufResponse[]>(`/questoes/${id}/itens-vouf`).catch(() => [] as VoufResponse[]),
+  ]);
+
+  return {
+    ...questao,
+    alternativas: alternativas.length > 0 ? alternativas : undefined,
+    itensVouf: itensVouf.length > 0 ? itensVouf : undefined,
+  };
+}
+
+export async function atualizarQuestao(id: string, request: QuestaoRequest): Promise<Questao> {
+  const res = await fetch(`${API_URL}/questoes/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao atualizar questão: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
 }
 
 // Interfaces para Avaliação

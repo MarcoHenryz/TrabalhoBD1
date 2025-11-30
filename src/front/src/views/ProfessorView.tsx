@@ -101,7 +101,14 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
             </div>
           )}
           <GerenciarQuestoes 
-            onQuestaoDeletada={handleQuestaoDeletada} 
+            professorId={professorId}
+            onQuestaoDeletada={handleQuestaoDeletada}
+            onQuestaoEditada={() => {
+              setSuccessMessage("Questão atualizada com sucesso!");
+              setErrorMessage(null);
+              setRefreshTrigger(prev => prev + 1);
+              setTimeout(() => setSuccessMessage(null), 5000);
+            }}
             onError={handleError} 
             refreshTrigger={refreshTrigger}
           />
