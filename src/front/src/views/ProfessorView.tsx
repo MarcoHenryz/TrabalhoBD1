@@ -3,11 +3,12 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { CriarQuestaoForm } from "@/components/forms/CriarQuestaoForm";
-import { ListarQuestoes } from "@/components/forms/ListarQuestoes";
 import { NovaAvaliacaoForm } from "@/components/forms/NovaAvaliacaoForm";
+import { GerenciarAvaliacoes } from "@/components/forms/GerenciarAvaliacoes";
+import { GerenciarQuestoes } from "@/components/forms/GerenciarQuestoes";
 import { useState } from "react";
 
-export type ProfessorSection = "questoes" | "provas" | "relatorios";
+export type ProfessorSection = "questoes" | "gerenciarQuestoes" | "provas" | "gerenciarAvaliacoes" | "relatorios";
 
 type ProfessorNavItem = {
   key: ProfessorSection;
@@ -33,7 +34,7 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
   const handleSuccess = () => {
     setSuccessMessage("Questão criada com sucesso!");
     setErrorMessage(null);
-    setRefreshTrigger(prev => prev + 1); // Trigger para recarregar a lista
+    setRefreshTrigger(prev => prev + 1); // Trigger para recarregar a lista de questões
     setTimeout(() => setSuccessMessage(null), 5000);
   };
 
@@ -52,6 +53,14 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
   const handleAvaliacaoCriada = () => {
     setSuccessMessage("Avaliação criada com sucesso!");
     setErrorMessage(null);
+    setRefreshTrigger(prev => prev + 1); // Trigger para recarregar a lista de avaliações
+    setTimeout(() => setSuccessMessage(null), 5000);
+  };
+
+  const handleAvaliacaoDeletada = () => {
+    setSuccessMessage("Avaliação excluída com sucesso!");
+    setErrorMessage(null);
+    setRefreshTrigger(prev => prev + 1); // Trigger para recarregar a lista
     setTimeout(() => setSuccessMessage(null), 5000);
   };
 
@@ -78,7 +87,20 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
             </div>
           )}
           <CriarQuestaoForm professorId={professorId} onSuccess={handleSuccess} onError={handleError} />
-          <ListarQuestoes 
+        </div>
+      ) : activeSection === "gerenciarQuestoes" ? (
+        <div className="space-y-6">
+          {successMessage && (
+            <div className="p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
+              {errorMessage}
+            </div>
+          )}
+          <GerenciarQuestoes 
             onQuestaoDeletada={handleQuestaoDeletada} 
             onError={handleError} 
             refreshTrigger={refreshTrigger}
@@ -97,6 +119,24 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
             </div>
           )}
           <NovaAvaliacaoForm onSuccess={handleAvaliacaoCriada} onError={handleError} />
+        </div>
+      ) : activeSection === "gerenciarAvaliacoes" ? (
+        <div className="space-y-6">
+          {successMessage && (
+            <div className="p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
+              {errorMessage}
+            </div>
+          )}
+          <GerenciarAvaliacoes 
+            onAvaliacaoDeletada={handleAvaliacaoDeletada} 
+            onError={handleError} 
+            refreshTrigger={refreshTrigger}
+          />
         </div>
       ) : (
         <Card className="w-full">

@@ -17,8 +17,10 @@ export function App() {
 
   const professorNav = useMemo(
     () => [
-      { key: "questoes" as ProfessorSection, label: "Criar questões", todo: "TODO: formulário para criação de questões" },
-      { key: "provas" as ProfessorSection, label: "Criar provas", todo: "TODO: montagem e agendamento de provas" },
+      { key: "questoes" as ProfessorSection, label: "Criar questões", todo: "Formulário para criação de questões" },
+      { key: "gerenciarQuestoes" as ProfessorSection, label: "Gerenciar Questões", todo: "Listagem e gerenciamento de questões" },
+      { key: "provas" as ProfessorSection, label: "Criar provas", todo: "Montagem e agendamento de provas" },
+      { key: "gerenciarAvaliacoes" as ProfessorSection, label: "Gerenciar Avaliações", todo: "Listagem e gerenciamento de avaliações" },
       { key: "relatorios" as ProfessorSection, label: "Ver relatórios", todo: "TODO: relatórios de desempenho das turmas" },
     ],
     [],

@@ -167,3 +167,21 @@ export async function adicionarQuestaoAvaliacao(
     throw new Error(`Erro ao adicionar questão à avaliação: ${res.statusText} - ${errorText}`);
   }
 }
+
+export async function listarAvaliacoes(): Promise<Avaliacao[]> {
+  return fetchFromBackend("/avaliacoes");
+}
+
+export async function deletarAvaliacao(id: string): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao deletar avaliação: ${res.statusText} - ${errorText}`);
+  }
+}
