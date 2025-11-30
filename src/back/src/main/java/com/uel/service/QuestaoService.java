@@ -78,6 +78,24 @@ public class QuestaoService {
         return questaoRepository.buscarPorId(id);
     }
 
+    public List<com.uel.controller.QuestaoController.AlternativaResponse> buscarAlternativasPorQuestaoId(UUID questaoId) throws SQLException {
+        List<com.uel.entity.Alternativa> alternativas = alternativaRepository.buscarPorQuestaoId(questaoId);
+        return alternativas.stream()
+                .map(alt -> new com.uel.controller.QuestaoController.AlternativaResponse(
+                        alt.getAlternativa(),
+                        alt.getVerdadeiro()))
+                .toList();
+    }
+
+    public List<com.uel.controller.QuestaoController.VoufResponse> buscarItensVoufPorQuestaoId(UUID questaoId) throws SQLException {
+        List<com.uel.entity.Vouf> itens = voufRepository.buscarPorQuestaoId(questaoId);
+        return itens.stream()
+                .map(item -> new com.uel.controller.QuestaoController.VoufResponse(
+                        item.getItem(),
+                        item.getVerdadeiro()))
+                .toList();
+    }
+
     @Transactional
     public Questao atualizar(
             UUID id,

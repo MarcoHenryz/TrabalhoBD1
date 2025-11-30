@@ -71,6 +71,24 @@ public class QuestaoController {
         }
     }
 
+    @GetMapping("/{id}/alternativas")
+    public List<AlternativaResponse> buscarAlternativas(@PathVariable UUID id) {
+        try {
+            return questaoService.buscarAlternativasPorQuestaoId(id);
+        } catch (SQLException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao buscar alternativas", e);
+        }
+    }
+
+    @GetMapping("/{id}/itens-vouf")
+    public List<VoufResponse> buscarItensVouf(@PathVariable UUID id) {
+        try {
+            return questaoService.buscarItensVoufPorQuestaoId(id);
+        } catch (SQLException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao buscar itens VouF", e);
+        }
+    }
+
     @PutMapping("/{id}")
     public Questao atualizar(@PathVariable UUID id, @RequestBody QuestaoRequest request) {
         validarAtualizacao(request);
@@ -163,6 +181,16 @@ public class QuestaoController {
     }
 
     public record VoufRequest(
+            String item,
+            Boolean verdadeiro) {
+    }
+
+    public record AlternativaResponse(
+            String alternativa,
+            Boolean verdadeiro) {
+    }
+
+    public record VoufResponse(
             String item,
             Boolean verdadeiro) {
     }
