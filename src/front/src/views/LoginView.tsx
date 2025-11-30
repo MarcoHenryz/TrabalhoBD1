@@ -6,9 +6,10 @@ import type { FormEvent } from "react";
 
 type LoginViewProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  erro?: string | null;
 };
 
-export function LoginView({ onSubmit }: LoginViewProps) {
+export function LoginView({ onSubmit, erro }: LoginViewProps) {
   return (
     <main className="page">
       <Card className="w-full max-w-md">
@@ -17,6 +18,11 @@ export function LoginView({ onSubmit }: LoginViewProps) {
         </CardHeader>
         <CardContent>
           <form className="space-y-4" onSubmit={onSubmit}>
+            {erro && (
+              <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
+                {erro}
+              </div>
+            )}
             <div className="space-y-2">
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" name="email" type="email" placeholder="nome@universidade.br" required />

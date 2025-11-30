@@ -3,6 +3,7 @@ import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { AlunoView, type AlunoTab } from "@/views/AlunoView";
 import { LoginView } from "@/views/LoginView";
 import { ProfessorView, type ProfessorSection } from "@/views/ProfessorView";
+import { login, type Usuario } from "@/lib/api";
 import "./index.css";
 
 type View = "login" | "professor" | "aluno";
@@ -11,42 +12,65 @@ export function App() {
   const [view, setView] = useState<View>("login");
   const [professorSection, setProfessorSection] = useState<ProfessorSection>("questoes");
   const [alunoTab, setAlunoTab] = useState<AlunoTab>("disciplinas");
+  const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
+  const [erroLogin, setErroLogin] = useState<string | null>(null);
 
   const professorNav = useMemo(
     () => [
-      { key: "questoes" satisfies ProfessorSection, label: "Criar questões", todo: "TODO: formulário para criação de questões" },
-      { key: "provas" satisfies ProfessorSection, label: "Criar provas", todo: "TODO: montagem e agendamento de provas" },
-      { key: "relatorios" satisfies ProfessorSection, label: "Ver relatórios", todo: "TODO: relatórios de desempenho das turmas" },
+      { key: "questoes" as ProfessorSection, label: "Criar questões", todo: "TODO: formulário para criação de questões" },
+      { key: "provas" as ProfessorSection, label: "Criar provas", todo: "TODO: montagem e agendamento de provas" },
+      { key: "relatorios" as ProfessorSection, label: "Ver relatórios", todo: "TODO: relatórios de desempenho das turmas" },
     ],
     [],
   );
 
   const alunoNav = useMemo(
     () => [
-      { key: "disciplinas" satisfies AlunoTab, label: "Disciplinas matriculadas", todo: "TODO: listar disciplinas e docentes" },
-      { key: "provasPendentes" satisfies AlunoTab, label: "Provas pendentes", todo: "TODO: prazos e status das próximas provas" },
-      { key: "notas" satisfies AlunoTab, label: "Notas", todo: "TODO: notas recentes e histórico" },
-      { key: "relatorios" satisfies AlunoTab, label: "Relatórios", todo: "TODO: relatórios individuais de progresso" },
+      { key: "disciplinas" as AlunoTab, label: "Disciplinas matriculadas", todo: "TODO: listar disciplinas e docentes" },
+      { key: "provasPendentes" as AlunoTab, label: "Provas pendentes", todo: "TODO: prazos e status das próximas provas" },
+      { key: "notas" as AlunoTab, label: "Notas", todo: "TODO: notas recentes e histórico" },
+      { key: "relatorios" as AlunoTab, label: "Relatórios", todo: "TODO: relatórios individuais de progresso" },
     ],
     [],
   );
 
-  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const role = Math.random() < 0.5 ? "professor" : "aluno";
-    setView(role);
+    setErroLogin(null);
+    
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email") as string;
+    const senha = formData.get("password") as string;
+
+    try {
+      const usuario = await login(email, senha);
+      setUsuarioLogado(usuario);
+      
+      // Determina se é professor ou aluno baseado nos IDs
+      if (usuario.professorId) {
+        setView("professor");
+      } else if (usuario.alunoId) {
+        setView("aluno");
+      } else {
+        setErroLogin("Usuário não possui perfil de professor ou aluno");
+      }
+    } catch (error) {
+      setErroLogin(error instanceof Error ? error.message : "Erro ao fazer login");
+    }
   };
 
   const handleLogout = () => {
     setView("login");
     setProfessorSection("questoes");
     setAlunoTab("disciplinas");
+    setUsuarioLogado(null);
+    setErroLogin(null);
   };
 
-  if (view === "professor") {
+  if (view === "professor" && usuarioLogado) {
     const profile: ProfileInfo = {
       name: "Prof. Placeholder",
-      email: "professor@notaki.edu",
+      email: usuarioLogado.email,
       roleLabel: "Professor",
       dept: "Departamento X",
     };
@@ -62,10 +86,10 @@ export function App() {
     );
   }
 
-  if (view === "aluno") {
+  if (view === "aluno" && usuarioLogado) {
     const profile: ProfileInfo = {
       name: "Aluno Placeholder",
-      email: "aluno@notaki.edu",
+      email: usuarioLogado.email,
       roleLabel: "Aluno",
       dept: "Curso Y",
     };
@@ -75,7 +99,7 @@ export function App() {
     );
   }
 
-  return <LoginView onSubmit={handleLogin} />;
+  return <LoginView onSubmit={handleLogin} erro={erroLogin} />;
 }
 
 export default App;

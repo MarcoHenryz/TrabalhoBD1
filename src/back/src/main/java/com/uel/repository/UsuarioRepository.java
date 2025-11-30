@@ -35,15 +35,17 @@ public class UsuarioRepository {
 
   public Usuario buscarPorId(UUID targetId) throws SQLException {
     String sql = """
-      SELECT u.id,
-             u.email,
-             u.salt,
-             u.hash_senha,
-             a.id AS aluno_id
-        FROM usuarios u
-        LEFT JOIN alunos a ON a.usuario_id = u.id
-       WHERE u.id = ?
-      """;
+        SELECT u.id,
+               u.email,
+               u.salt,
+               u.hash_senha,
+               a.id AS aluno_id,
+               p.id AS professor_id
+          FROM usuarios u
+          LEFT JOIN alunos a ON a.usuario_id = u.id
+          LEFT JOIN professores p ON p.usuario_id = u.id
+         WHERE u.id = ?
+        """;
 
     try (Connection conn = dataSource.getConnection(); PreparedStatement pst = conn.prepareStatement(sql)) {
       pst.setObject(1, targetId);
@@ -60,22 +62,23 @@ public class UsuarioRepository {
 
   public List<Usuario> listarTodos() throws SQLException {
     String sql = """
-      SELECT u.id,
-             u.email,
-             u.salt,
-             u.hash_senha,
-             a.id AS aluno_id
-        FROM usuarios u
-        LEFT JOIN alunos a ON a.usuario_id = u.id
-    ORDER BY u.email
-      """;
+          SELECT u.id,
+                 u.email,
+                 u.salt,
+                 u.hash_senha,
+                 a.id AS aluno_id,
+                 p.id AS professor_id
+            FROM usuarios u
+            LEFT JOIN alunos a ON a.usuario_id = u.id
+            LEFT JOIN professores p ON p.usuario_id = u.id
+        ORDER BY u.email
+          """;
     List<Usuario> usuarios = new ArrayList<>();
 
     try (
-      Connection conn = dataSource.getConnection();
-      Statement st = conn.createStatement();
-      ResultSet rs = st.executeQuery(sql)
-    ) {
+        Connection conn = dataSource.getConnection();
+        Statement st = conn.createStatement();
+        ResultSet rs = st.executeQuery(sql)) {
       while (rs.next()) {
         usuarios.add(mapper(rs));
       }
@@ -112,11 +115,18 @@ public class UsuarioRepository {
     String salt = rs.getString("salt");
     String hashSenha = rs.getString("hash_senha");
     UUID alunoId = null;
+    UUID professorId = null;
     try {
       alunoId = rs.getObject("aluno_id", UUID.class);
-    } catch (SQLException ignored) {}
+    } catch (SQLException ignored) {
+    }
+    try {
+      professorId = rs.getObject("professor_id", UUID.class);
+    } catch (SQLException ignored) {
+    }
     Usuario usuario = new Usuario(id, email, salt, hashSenha);
     usuario.setAlunoId(alunoId);
+    usuario.setProfessorId(professorId);
     return usuario;
   }
 }

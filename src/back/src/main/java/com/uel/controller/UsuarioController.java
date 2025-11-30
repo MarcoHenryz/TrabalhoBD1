@@ -100,5 +100,26 @@ public class UsuarioController {
     }
   }
 
+  @PostMapping("/login")
+  public ResponseEntity<Usuario> login(@RequestBody UsuarioRequest request) {
+      validarRequest(request); // Reutiliza sua validação existente
+      try {
+          // 1. Busca o usuário pelo email (usando o listarTodos do service)
+          Usuario usuario = usuarioService.listarTodos().stream()
+              .filter(u -> u.getEmail().equals(request.email()))
+              .findFirst()
+              .orElse(null);
+      
+          // 2. Verifica a senha usando o método que já existe no seu Service
+          if (usuario != null && usuarioService.conferirSenha(usuario, request.senha())) {
+              return ResponseEntity.ok(usuario);
+          }
+          
+          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      } catch (SQLException e) {
+          throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro no login", e);
+      }
+  }
+
   public record UsuarioRequest(String email, String senha) {}
 }
