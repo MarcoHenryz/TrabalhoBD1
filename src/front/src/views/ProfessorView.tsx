@@ -2,6 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
+import { CriarQuestaoForm } from "@/components/forms/CriarQuestaoForm";
+import { useState } from "react";
 
 export type ProfessorSection = "questoes" | "provas" | "relatorios";
 
@@ -17,10 +19,24 @@ type ProfessorViewProps = {
   onSelectSection: (key: ProfessorSection) => void;
   profile: ProfileInfo;
   onLogout: () => void;
+  professorId: string;
 };
 
-export function ProfessorView({ navItems, activeSection, onSelectSection, profile, onLogout }: ProfessorViewProps) {
+export function ProfessorView({ navItems, activeSection, onSelectSection, profile, onLogout, professorId }: ProfessorViewProps) {
   const currentSection = navItems.find(item => item.key === activeSection)!;
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSuccess = () => {
+    setSuccessMessage("Questão criada com sucesso!");
+    setErrorMessage(null);
+    setTimeout(() => setSuccessMessage(null), 5000);
+  };
+
+  const handleError = (error: string) => {
+    setErrorMessage(error);
+    setSuccessMessage(null);
+  };
 
   return (
     <DashboardLayout
@@ -32,18 +48,34 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
       profile={profile}
       onLogout={onLogout}
     >
-      <Card className="w-full">
-        <CardHeader className="gap-2">
-          <CardTitle className="text-2xl">{currentSection.label}</CardTitle>
-          <CardDescription>{currentSection.todo}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <PlaceholderGrid />
-          <div className="panel h-44 flex items-center justify-center text-muted-foreground">
-            TODO: conteúdo específico da seção escolhida
-          </div>
-        </CardContent>
-      </Card>
+      {activeSection === "questoes" ? (
+        <div className="space-y-4">
+          {successMessage && (
+            <div className="p-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md">
+              {successMessage}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-md">
+              {errorMessage}
+            </div>
+          )}
+          <CriarQuestaoForm professorId={professorId} onSuccess={handleSuccess} onError={handleError} />
+        </div>
+      ) : (
+        <Card className="w-full">
+          <CardHeader className="gap-2">
+            <CardTitle className="text-2xl">{currentSection.label}</CardTitle>
+            <CardDescription>{currentSection.todo}</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <PlaceholderGrid />
+            <div className="panel h-44 flex items-center justify-center text-muted-foreground">
+              TODO: conteúdo específico da seção escolhida
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </DashboardLayout>
   );
 }

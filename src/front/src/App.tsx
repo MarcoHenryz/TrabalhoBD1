@@ -82,6 +82,7 @@ export function App() {
         onSelectSection={setProfessorSection}
         profile={profile}
         onLogout={handleLogout}
+        professorId={usuarioLogado.professorId!}
       />
     );
   }
