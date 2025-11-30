@@ -13,7 +13,7 @@ import {
   type Dificuldade,
   type AvaliacaoRequest,
   type AdicionarQuestaoAvaliacaoRequest
-} from "@/lib/api";
+} from "@/lib/apiprof";
 import { Loader2 } from "lucide-react";
 
 type QuestaoSelecionada = {

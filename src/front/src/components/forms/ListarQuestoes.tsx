@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { listarQuestoes, deletarQuestao, type Questao, type TipoQuestao, type Dificuldade } from "@/lib/api";
+import { listarQuestoes, deletarQuestao, type Questao, type TipoQuestao, type Dificuldade } from "@/lib/apiprof";
 import { Trash2, Loader2 } from "lucide-react";
 
 type ListarQuestoesProps = {

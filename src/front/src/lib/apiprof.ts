@@ -41,7 +41,7 @@ export interface Questao {
   professorId: string;
 }
 
-export async function fetchFromBackend(endpoint: string, options: RequestInit = {}) {
+export async function fetchFromBackend<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const res = await fetch(`${API_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -111,12 +111,70 @@ export async function deletarQuestao(id: string): Promise<void> {
   }
 }
 
+export async function buscarQuestaoPorId(id: string): Promise<Questao> {
+  return fetchFromBackend(`/questoes/${id}`);
+}
+
+export interface AlternativaResponse {
+  alternativa: string;
+  verdadeiro: boolean;
+}
+
+export interface VoufResponse {
+  item: string;
+  verdadeiro: boolean;
+}
+
+export interface QuestaoCompleta extends Questao {
+  alternativas?: AlternativaResponse[];
+  itensVouf?: VoufResponse[];
+}
+
+export async function buscarQuestaoCompleta(id: string): Promise<QuestaoCompleta> {
+  const [questao, alternativas, itensVouf] = await Promise.all([
+    buscarQuestaoPorId(id),
+    fetchFromBackend<AlternativaResponse[]>(`/questoes/${id}/alternativas`).catch(() => [] as AlternativaResponse[]),
+    fetchFromBackend<VoufResponse[]>(`/questoes/${id}/itens-vouf`).catch(() => [] as VoufResponse[]),
+  ]);
+
+  return {
+    ...questao,
+    alternativas: alternativas.length > 0 ? alternativas : undefined,
+    itensVouf: itensVouf.length > 0 ? itensVouf : undefined,
+  };
+}
+
+export async function atualizarQuestao(id: string, request: QuestaoRequest): Promise<Questao> {
+  const res = await fetch(`${API_URL}/questoes/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao atualizar questão: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
+}
+
 // Interfaces para Avaliação
+export interface AvaliacaoParticipacao {
+  avaliacaoId: string;
+  alunoId: string;
+  nota?: number | null;
+  aluno?: Aluno | null;
+}
+
 export interface Avaliacao {
   id: string;
   descricao: string;
   data: string; // LocalDate format: "YYYY-MM-DD"
   horario: string; // LocalTime format: "HH:mm"
+  participacoes?: AvaliacaoParticipacao[];
 }
 
 export interface AvaliacaoRequest {
@@ -185,3 +243,91 @@ export async function deletarAvaliacao(id: string): Promise<void> {
     throw new Error(`Erro ao deletar avaliação: ${res.statusText} - ${errorText}`);
   }
 }
+
+export async function buscarAvaliacaoPorId(id: string): Promise<Avaliacao> {
+  return fetchFromBackend(`/avaliacoes/${id}`);
+}
+
+export async function atualizarAvaliacao(id: string, request: AvaliacaoRequest): Promise<Avaliacao> {
+  const res = await fetch(`${API_URL}/avaliacoes/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao atualizar avaliação: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
+}
+
+export async function listarQuestoesAvaliacao(avaliacaoId: string): Promise<Questao[]> {
+  return fetchFromBackend(`/avaliacoes/${avaliacaoId}/questoes`);
+}
+
+export async function removerQuestaoAvaliacao(avaliacaoId: string, questaoId: string): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${avaliacaoId}/questoes/${questaoId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao remover questão da avaliação: ${res.statusText} - ${errorText}`);
+  }
+}
+
+// Interfaces para Aluno
+export interface Aluno {
+  id: string;
+  matricula: string;
+  media: number;
+  dataInicio: string; // LocalDate format: "YYYY-MM-DD"
+  dataConclusao?: string | null; // LocalDate format: "YYYY-MM-DD"
+  usuario?: {
+    id: string;
+    email: string;
+  } | null;
+}
+
+// Funções para Aluno
+export async function listarAlunos(): Promise<Aluno[]> {
+  return fetchFromBackend("/alunos");
+}
+
+// Funções para associar/desassociar alunos de avaliações
+export async function associarAlunoAvaliacao(avaliacaoId: string, alunoId: string): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${avaliacaoId}/alunos`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ alunoId }),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao associar aluno: ${res.statusText} - ${errorText}`);
+  }
+}
+
+export async function desassociarAlunoAvaliacao(avaliacaoId: string, alunoId: string): Promise<void> {
+  const res = await fetch(`${API_URL}/avaliacoes/${avaliacaoId}/alunos/${alunoId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao desassociar aluno: ${res.statusText} - ${errorText}`);
+  }
+}
+

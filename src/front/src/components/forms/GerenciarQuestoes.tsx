@@ -9,19 +9,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { listarQuestoes, deletarQuestao, type Questao, type TipoQuestao, type Dificuldade } from "@/lib/api";
-import { Loader2, Trash2 } from "lucide-react";
+import { listarQuestoes, deletarQuestao, type Questao, type TipoQuestao, type Dificuldade } from "@/lib/apiprof";
+import { Loader2, Trash2, Pencil } from "lucide-react";
+import { EditarQuestaoForm } from "./EditarQuestaoForm";
 
 type GerenciarQuestoesProps = {
+  professorId: string;
   onQuestaoDeletada?: () => void;
+  onQuestaoEditada?: () => void;
   onError?: (error: string) => void;
   refreshTrigger?: number;
 };
 
-export function GerenciarQuestoes({ onQuestaoDeletada, onError, refreshTrigger }: GerenciarQuestoesProps) {
+export function GerenciarQuestoes({ professorId, onQuestaoDeletada, onQuestaoEditada, onError, refreshTrigger }: GerenciarQuestoesProps) {
   const [questoes, setQuestoes] = useState<Questao[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletandoId, setDeletandoId] = useState<string | null>(null);
+  const [editandoId, setEditandoId] = useState<string | null>(null);
 
   const carregarQuestoes = async () => {
     try {
@@ -165,25 +169,36 @@ export function GerenciarQuestoes({ onQuestaoDeletada, onError, refreshTrigger }
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      onClick={() => handleDeletar(questao.id)}
-                      disabled={deletandoId === questao.id}
-                      className="gap-2"
-                    >
-                      {deletandoId === questao.id ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Excluindo...
-                        </>
-                      ) : (
-                        <>
-                          <Trash2 className="h-4 w-4" />
-                          Excluir
-                        </>
-                      )}
-                    </Button>
+                    <div className="flex items-center justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setEditandoId(questao.id)}
+                        className="gap-2"
+                      >
+                        <Pencil className="h-4 w-4" />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeletar(questao.id)}
+                        disabled={deletandoId === questao.id}
+                        className="gap-2"
+                      >
+                        {deletandoId === questao.id ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Excluindo...
+                          </>
+                        ) : (
+                          <>
+                            <Trash2 className="h-4 w-4" />
+                            Excluir
+                          </>
+                        )}
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -191,6 +206,24 @@ export function GerenciarQuestoes({ onQuestaoDeletada, onError, refreshTrigger }
           </Table>
         </div>
       </CardContent>
+      {editandoId && (
+        <EditarQuestaoForm
+          questaoId={editandoId}
+          professorId={professorId}
+          open={!!editandoId}
+          onOpenChange={(open) => {
+            if (!open) {
+              setEditandoId(null);
+            }
+          }}
+          onSuccess={() => {
+            carregarQuestoes();
+            onQuestaoEditada?.();
+            setEditandoId(null);
+          }}
+          onError={onError}
+        />
+      )}
     </Card>
   );
 }
