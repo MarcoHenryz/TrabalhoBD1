@@ -20,7 +20,7 @@ import {
   type AlternativaRequest,
   type VoufRequest,
   type QuestaoCompleta,
-} from "@/lib/api";
+} from "@/lib/apiprof";
 import { Plus, Trash2, Loader2 } from "lucide-react";
 
 type EditarQuestaoFormProps = {

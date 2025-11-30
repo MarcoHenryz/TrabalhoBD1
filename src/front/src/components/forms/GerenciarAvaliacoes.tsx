@@ -9,8 +9,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { listarAvaliacoes, deletarAvaliacao, type Avaliacao } from "@/lib/api";
-import { Loader2, Trash2, Users } from "lucide-react";
+import { listarAvaliacoes, deletarAvaliacao, type Avaliacao } from "@/lib/apiprof";
+import { Loader2, Trash2, Users, Edit } from "lucide-react";
+import { EditarAvaliacaoModal } from "./EditarAvaliacaoModal";
+import { DistribuirAvaliacaoModal } from "./DistribuirAvaliacaoModal";
 
 type GerenciarAvaliacoesProps = {
   onAvaliacaoDeletada?: () => void;
@@ -22,6 +24,10 @@ export function GerenciarAvaliacoes({ onAvaliacaoDeletada, onError, refreshTrigg
   const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
   const [loading, setLoading] = useState(true);
   const [deletandoId, setDeletandoId] = useState<string | null>(null);
+  const [editandoId, setEditandoId] = useState<string | null>(null);
+  const [modalAberto, setModalAberto] = useState(false);
+  const [distribuindoId, setDistribuindoId] = useState<string | null>(null);
+  const [modalDistribuirAberto, setModalDistribuirAberto] = useState(false);
 
   const carregarAvaliacoes = async () => {
     try {
@@ -59,8 +65,32 @@ export function GerenciarAvaliacoes({ onAvaliacaoDeletada, onError, refreshTrigg
   };
 
   const handleVincularAlunos = (id: string) => {
-    console.log("Vincular alunos para avaliação:", id);
-    // TODO: Implementar funcionalidade de vincular alunos
+    setDistribuindoId(id);
+    setModalDistribuirAberto(true);
+  };
+
+  const handleModalDistribuirFechar = (open: boolean) => {
+    setModalDistribuirAberto(open);
+    if (!open) {
+      setDistribuindoId(null);
+    }
+  };
+
+  const handleEditar = (id: string) => {
+    setEditandoId(id);
+    setModalAberto(true);
+  };
+
+  const handleModalFechar = (open: boolean) => {
+    setModalAberto(open);
+    if (!open) {
+      setEditandoId(null);
+    }
+  };
+
+  const handleAvaliacaoAtualizada = () => {
+    carregarAvaliacoes();
+    onAvaliacaoDeletada?.(); // Reutiliza o callback para atualizar a lista
   };
 
   const formatarData = (data: string): string => {
@@ -131,6 +161,15 @@ export function GerenciarAvaliacoes({ onAvaliacaoDeletada, onError, refreshTrigg
                       <Button
                         variant="outline"
                         size="sm"
+                        onClick={() => handleEditar(avaliacao.id)}
+                        className="gap-2"
+                      >
+                        <Edit className="h-4 w-4" />
+                        Editar
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleVincularAlunos(avaliacao.id)}
                         className="gap-2"
                       >
@@ -164,6 +203,24 @@ export function GerenciarAvaliacoes({ onAvaliacaoDeletada, onError, refreshTrigg
           </Table>
         </div>
       </CardContent>
+      {editandoId && (
+        <EditarAvaliacaoModal
+          avaliacaoId={editandoId}
+          open={modalAberto}
+          onOpenChange={handleModalFechar}
+          onSuccess={handleAvaliacaoAtualizada}
+          onError={onError}
+        />
+      )}
+      {distribuindoId && (
+        <DistribuirAvaliacaoModal
+          avaliacaoId={distribuindoId}
+          avaliacaoDescricao={avaliacoes.find((a) => a.id === distribuindoId)?.descricao || ""}
+          open={modalDistribuirAberto}
+          onOpenChange={handleModalDistribuirFechar}
+          onError={onError}
+        />
+      )}
     </Card>
   );
 }

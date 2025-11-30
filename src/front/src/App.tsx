@@ -3,7 +3,7 @@ import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { AlunoView, type AlunoTab } from "@/views/AlunoView";
 import { LoginView } from "@/views/LoginView";
 import { ProfessorView, type ProfessorSection } from "@/views/ProfessorView";
-import { login, type Usuario } from "@/lib/api";
+import { login, type Usuario } from "@/lib/apiprof";
 import "./index.css";
 
 type View = "login" | "professor" | "aluno";

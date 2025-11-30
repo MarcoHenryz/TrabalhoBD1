@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { listarQuestoes, deletarQuestao, type Questao, type TipoQuestao, type Dificuldade } from "@/lib/api";
+import { listarQuestoes, deletarQuestao, type Questao, type TipoQuestao, type Dificuldade } from "@/lib/apiprof";
 import { Loader2, Trash2, Pencil } from "lucide-react";
 import { EditarQuestaoForm } from "./EditarQuestaoForm";
 
