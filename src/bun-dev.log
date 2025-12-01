@@ -1,0 +1,26 @@
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 800ms: src/index.html
+Reloaded in 79ms: src/lib/apiprof.ts + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 629ms: src/index.html
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 772ms: src/index.html
+Reloaded in 92ms: src/lib/apiprof.ts + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 825ms: src/index.html
+Reloaded in 78ms: src/lib/apiprof.ts + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 783ms: src/index.html
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 771ms: src/index.html

@@ -1,4 +1,9 @@
-const API_URL = "http://localhost:8080"; 
+const API_URL =
+  (typeof process !== "undefined" && process.env.API_URL) ||
+  // @ts-expect-error bun/esbuild may expose import.meta.env
+  (typeof import.meta !== "undefined" && (import.meta as any).env?.API_URL) ||
+  (typeof window !== "undefined" && (window as any).__API_URL__) ||
+  "http://localhost:8081";
 
 export interface Usuario {
   id: string;
@@ -330,4 +335,3 @@ export async function desassociarAlunoAvaliacao(avaliacaoId: string, alunoId: st
     throw new Error(`Erro ao desassociar aluno: ${res.statusText} - ${errorText}`);
   }
 }
-
