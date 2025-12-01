@@ -39,6 +39,14 @@ public class AvaliacaoService {
     return avaliacaoRepository.listarTodas();
   }
 
+  public List<Avaliacao> listarPorAluno(UUID alunoId) throws SQLException {
+    Aluno aluno = alunoRepository.buscarPorId(alunoId);
+    if (aluno == null) {
+      throw new IllegalArgumentException("Aluno não encontrado");
+    }
+    return avaliacaoRepository.listarPorAluno(alunoId);
+  }
+
   public Avaliacao buscarPorId(UUID id) throws SQLException {
     return avaliacaoRepository.buscarPorId(id);
   }

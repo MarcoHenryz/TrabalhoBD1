@@ -186,11 +186,13 @@ public class QuestaoController {
     }
 
     public record AlternativaResponse(
+            UUID id,
             String alternativa,
             Boolean verdadeiro) {
     }
 
     public record VoufResponse(
+            UUID id,
             String item,
             Boolean verdadeiro) {
     }

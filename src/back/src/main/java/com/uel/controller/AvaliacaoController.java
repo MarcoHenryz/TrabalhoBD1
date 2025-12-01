@@ -57,6 +57,17 @@ public class AvaliacaoController {
     }
   }
 
+  @GetMapping("/aluno/{alunoId}")
+  public List<Avaliacao> listarPorAluno(@PathVariable UUID alunoId) {
+    try {
+      return avaliacaoService.listarPorAluno(alunoId);
+    } catch (IllegalArgumentException e) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+    } catch (SQLException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar avaliações do aluno", e);
+    }
+  }
+
   @GetMapping("/{id}")
   public Avaliacao buscar(@PathVariable UUID id) {
     try {

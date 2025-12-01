@@ -80,6 +80,28 @@ public class AvaliacaoRepository {
     return avaliacoes;
   }
 
+  public List<Avaliacao> listarPorAluno(UUID alunoId) throws SQLException {
+    String sql = """
+          SELECT a.id, a.descricao, a.data, a.horario
+            FROM avaliacoes a
+            JOIN avaliacao_alunos aa ON aa.avaliacao_id = a.id
+           WHERE aa.aluno_id = ?
+        ORDER BY a.data DESC, a.horario DESC
+          """;
+    List<Avaliacao> avaliacoes = new ArrayList<>();
+    try (Connection conn = dataSource.getConnection(); PreparedStatement pst = conn.prepareStatement(sql)) {
+      pst.setObject(1, alunoId);
+      try (ResultSet rs = pst.executeQuery()) {
+        while (rs.next()) {
+          Avaliacao avaliacao = map(rs);
+          avaliacao.setParticipacoes(buscarParticipacoes(avaliacao.getId()));
+          avaliacoes.add(avaliacao);
+        }
+      }
+    }
+    return avaliacoes;
+  }
+
   public void atualizar(Avaliacao avaliacao) throws SQLException {
     String sql = "UPDATE avaliacoes SET descricao = ?, data = ?, horario = ? WHERE id = ?";
     try (Connection conn = dataSource.getConnection()) {

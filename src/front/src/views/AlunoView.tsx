@@ -1,9 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
-import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
+import { ProvasAluno } from "@/components/aluno/ProvasAluno";
+import { TutoresAluno } from "@/components/aluno/TutoresAluno";
+import { NotasAluno } from "@/components/aluno/NotasAluno";
+import { RelatoriosAluno } from "../components/aluno/RelatoriosAluno";
 
-export type AlunoTab = "disciplinas" | "provasPendentes" | "notas" | "relatorios";
+export type AlunoTab = "tutores" | "provasPendentes" | "notas" | "relatorios";
 
 type AlunoNavItem = {
   key: AlunoTab;
@@ -17,11 +19,27 @@ type AlunoViewProps = {
   onSelectTab: (key: AlunoTab) => void;
   profile: ProfileInfo;
   onLogout: () => void;
+  alunoId: string;
+  selectedAvaliacaoId: string | null;
+  onSelectAvaliacao: (id: string | null) => void;
+  onUpdateProfile: (data: { name?: string; avatar?: string | null }) => void;
+  theme: "light" | "dark";
+  onToggleTheme: () => void;
 };
 
-export function AlunoView({ navItems, activeTab, onSelectTab, profile, onLogout }: AlunoViewProps) {
-  const currentTab = navItems.find(item => item.key === activeTab)!;
-
+export function AlunoView({
+  navItems,
+  activeTab,
+  onSelectTab,
+  profile,
+  onLogout,
+  onUpdateProfile,
+  alunoId,
+  selectedAvaliacaoId,
+  onSelectAvaliacao,
+  theme,
+  onToggleTheme,
+}: AlunoViewProps) {
   return (
     <DashboardLayout
       title="Portal do Aluno"
@@ -31,19 +49,33 @@ export function AlunoView({ navItems, activeTab, onSelectTab, profile, onLogout 
       onSelect={onSelectTab}
       profile={profile}
       onLogout={onLogout}
+      onUpdateProfile={onUpdateProfile}
+      theme={theme}
+      onToggleTheme={onToggleTheme}
     >
-      <Card className="w-full">
-        <CardHeader className="gap-2">
-          <CardTitle className="text-2xl">{currentTab.label}</CardTitle>
-          <CardDescription>{currentTab.todo}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <PlaceholderGrid />
-          <div className="panel h-44 flex items-center justify-center text-muted-foreground">
-            TODO: conteúdo específico da aba escolhida
-          </div>
-        </CardContent>
-      </Card>
+      {activeTab === "provasPendentes" ? (
+        <ProvasAluno
+          alunoId={alunoId}
+          selectedAvaliacaoId={selectedAvaliacaoId}
+          onSelectAvaliacao={onSelectAvaliacao}
+        />
+      ) : activeTab === "tutores" ? (
+        <TutoresAluno
+          alunoId={alunoId}
+          onOpenAvaliacao={(avaliacaoId) => {
+            onSelectAvaliacao(avaliacaoId);
+            onSelectTab("provasPendentes");
+          }}
+        />
+      ) : activeTab === "notas" ? (
+        <NotasAluno
+          alunoId={alunoId}
+          selectedAvaliacaoId={selectedAvaliacaoId}
+          onSelectAvaliacao={onSelectAvaliacao}
+        />
+      ) : (
+        <RelatoriosAluno alunoId={alunoId} />
+      )}
     </DashboardLayout>
   );
 }

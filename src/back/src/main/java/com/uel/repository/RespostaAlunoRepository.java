@@ -142,6 +142,81 @@ public class RespostaAlunoRepository {
         return false;
     }
 
+    public List<com.uel.dto.CorrecaoDissertativaDTO> listarParaCorrecao(UUID professorId, Boolean corrigido)
+            throws SQLException {
+        StringBuilder sql = new StringBuilder("""
+                  SELECT ra.id                AS resposta_id,
+                         ra.avaliacao_id      AS avaliacao_id,
+                         a.descricao          AS avaliacao_descricao,
+                         a.data               AS avaliacao_data,
+                         ra.aluno_id          AS aluno_id,
+                         al.matricula         AS aluno_matricula,
+                         u.email              AS aluno_email,
+                         q.questao_id         AS questao_id,
+                         q.tema               AS tema,
+                         q.enunciado          AS enunciado,
+                         ra.resposta_texto    AS resposta_texto,
+                         ra.nota              AS nota,
+                         ra.corrigido         AS corrigido,
+                         ra.respondido_em     AS respondido_em
+                    FROM respostas_alunos ra
+                    JOIN questoes q ON q.questao_id = ra.questao_id
+                    JOIN avaliacoes a ON a.id = ra.avaliacao_id
+                    JOIN alunos al ON al.id = ra.aluno_id
+                    JOIN usuarios u ON u.id = al.usuario_id
+                   WHERE q.professor_id = ?
+                     AND q.tipo = 'DISSERTATIVA'
+                """);
+
+        List<Object> parametros = new ArrayList<>();
+        parametros.add(professorId);
+
+        if (corrigido != null) {
+            sql.append(" AND ra.corrigido = ?");
+            parametros.add(corrigido);
+        }
+
+        sql.append(" ORDER BY ra.corrigido ASC, ra.respondido_em DESC");
+
+        List<com.uel.dto.CorrecaoDissertativaDTO> resultados = new ArrayList<>();
+
+        try (Connection conn = dataSource.getConnection();
+                PreparedStatement pst = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < parametros.size(); i++) {
+                Object param = parametros.get(i);
+                if (param instanceof UUID uuid) {
+                    pst.setObject(i + 1, uuid);
+                } else if (param instanceof Boolean bool) {
+                    pst.setBoolean(i + 1, bool);
+                } else {
+                    pst.setObject(i + 1, param);
+                }
+            }
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    resultados.add(new com.uel.dto.CorrecaoDissertativaDTO(
+                            rs.getObject("resposta_id", UUID.class),
+                            rs.getObject("avaliacao_id", UUID.class),
+                            rs.getString("avaliacao_descricao"),
+                            rs.getObject("avaliacao_data", java.time.LocalDate.class),
+                            rs.getObject("aluno_id", UUID.class),
+                            rs.getString("aluno_matricula"),
+                            rs.getString("aluno_email"),
+                            rs.getObject("questao_id", UUID.class),
+                            rs.getString("tema"),
+                            rs.getString("enunciado"),
+                            rs.getString("resposta_texto"),
+                            rs.getBigDecimal("nota") != null ? rs.getBigDecimal("nota").doubleValue() * 10 : null,
+                            rs.getBoolean("corrigido")));
+                }
+            }
+        }
+
+        return resultados;
+    }
+
     private RespostaAluno mapearResposta(ResultSet rs) throws SQLException {
         RespostaAluno resposta = new RespostaAluno();
         resposta.setId(rs.getObject("id", UUID.class));

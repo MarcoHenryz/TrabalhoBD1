@@ -52,12 +52,12 @@ public class Questao {
         this.tema = tema;
     }
 
-    public Dificuldade getNivelDificuldade() {
+    public Dificuldade getDificuldade() {
         return dificuldade;
     }
 
-    public void setNivelDificuldade(Dificuldade nivelDificuldade) {
-        this.dificuldade = nivelDificuldade;
+    public void setDificuldade(Dificuldade dificuldade) {
+        this.dificuldade = dificuldade;
     }
 
     public UUID getProfessorId() {

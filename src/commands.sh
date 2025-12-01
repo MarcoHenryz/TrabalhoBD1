@@ -5,12 +5,48 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FRONT_DIR="${ROOT_DIR}/front"
 PID_FILE="${ROOT_DIR}/.bun_dev.pid"
 LOG_FILE="${ROOT_DIR}/bun-dev.log"
+DEFAULT_API_URL="http://localhost:8082"
 
 if command -v docker-compose >/dev/null 2>&1; then
   COMPOSE_CMD=(docker-compose)
 else
   COMPOSE_CMD=(docker compose)
 fi
+
+wait_for_api() {
+  local api_url="${API_URL:-$DEFAULT_API_URL}"
+  local endpoint="${api_url}/usuarios/login"
+  echo "Waiting for API at ${api_url} ..."
+  for i in {1..12}; do
+    local status
+    status=$(curl -s -o /dev/null -w "%{http_code}" --max-time 2 "${endpoint}") || status="000"
+    if [ "${status}" != "000" ]; then
+      echo "API reachable (HTTP ${status})"
+      return 0
+    fi
+    sleep 2
+  done
+  echo "API not reachable after timeout" >&2
+  return 1
+}
+
+login_smoke_test() {
+  local api_url="${API_URL:-$DEFAULT_API_URL}"
+  local payload='{"email":"aluno1@email.com","senha":"senha"}'
+  local tmp
+  tmp="$(mktemp)"
+  local status
+  status=$(curl -s -o "${tmp}" -w "%{http_code}" -H "Content-Type: application/json" --max-time 4 -X POST \
+    -d "${payload}" "${api_url}/usuarios/login") || status="000"
+  if [ "${status}" = "200" ]; then
+    echo "Login smoke test OK (aluno1)."
+  else
+    echo "Login smoke test FAILED (HTTP ${status}). Response:"
+    cat "${tmp}"
+    echo
+  fi
+  rm -f "${tmp}"
+}
 
 start_backend() {
   echo "Starting backend containers..."
@@ -36,7 +72,7 @@ start_frontend() {
   echo "Starting frontend (bun run dev)..."
   (
     cd "${FRONT_DIR}"
-    nohup bun run dev >> "${LOG_FILE}" 2>&1 &
+    API_URL="${API_URL:-$DEFAULT_API_URL}" nohup bun run dev >> "${LOG_FILE}" 2>&1 &
     echo $! > "${PID_FILE}"
   )
 }
@@ -66,6 +102,8 @@ stop_frontend() {
 
 run_all() {
   start_backend
+  wait_for_api || true
+  login_smoke_test || true
   start_frontend
 }
 
@@ -92,6 +130,8 @@ reset_all() {
   "${COMPOSE_CMD[@]}" -f "${ROOT_DIR}/docker-compose.yml" down -v || true
   echo "Rebuilding and starting backend..."
   "${COMPOSE_CMD[@]}" -f "${ROOT_DIR}/docker-compose.yml" up --build -d
+  wait_for_api || true
+  login_smoke_test || true
   echo "Restarting frontend..."
   start_frontend
 }
@@ -111,5 +151,9 @@ case "${1-}" in
   stop) stop_all ;;
   reset) reset_all ;;
   populate) populate_data ;;
+  test-login)
+    wait_for_api || true
+    login_smoke_test || true
+    ;;
   *) usage; exit 1 ;;
 esac

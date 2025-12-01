@@ -6,9 +6,17 @@ import { CriarQuestaoForm } from "@/components/forms/CriarQuestaoForm";
 import { NovaAvaliacaoForm } from "@/components/forms/NovaAvaliacaoForm";
 import { GerenciarAvaliacoes } from "@/components/forms/GerenciarAvaliacoes";
 import { GerenciarQuestoes } from "@/components/forms/GerenciarQuestoes";
+import { RelatoriosProfessor } from "@/components/professor/RelatoriosProfessor";
+import { CorrecaoQuestoes } from "@/components/professor/CorrecaoQuestoes";
 import { useState } from "react";
 
-export type ProfessorSection = "questoes" | "gerenciarQuestoes" | "provas" | "gerenciarAvaliacoes" | "relatorios";
+export type ProfessorSection =
+  | "questoes"
+  | "gerenciarQuestoes"
+  | "provas"
+  | "gerenciarAvaliacoes"
+  | "correcoes"
+  | "relatorios";
 
 type ProfessorNavItem = {
   key: ProfessorSection;
@@ -22,10 +30,23 @@ type ProfessorViewProps = {
   onSelectSection: (key: ProfessorSection) => void;
   profile: ProfileInfo;
   onLogout: () => void;
+  onUpdateProfile: (data: { name?: string; avatar?: string | null }) => void;
+  theme: "light" | "dark";
+  onToggleTheme: () => void;
   professorId: string;
 };
 
-export function ProfessorView({ navItems, activeSection, onSelectSection, profile, onLogout, professorId }: ProfessorViewProps) {
+export function ProfessorView({
+  navItems,
+  activeSection,
+  onSelectSection,
+  profile,
+  onLogout,
+  onUpdateProfile,
+  theme,
+  onToggleTheme,
+  professorId,
+}: ProfessorViewProps) {
   const currentSection = navItems.find(item => item.key === activeSection)!;
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -73,6 +94,9 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
       onSelect={onSelectSection}
       profile={profile}
       onLogout={onLogout}
+      onUpdateProfile={onUpdateProfile}
+      theme={theme}
+      onToggleTheme={onToggleTheme}
     >
       {activeSection === "questoes" ? (
         <div className="space-y-6">
@@ -145,6 +169,10 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
             refreshTrigger={refreshTrigger}
           />
         </div>
+      ) : activeSection === "correcoes" ? (
+        <CorrecaoQuestoes professorId={professorId} />
+      ) : activeSection === "relatorios" ? (
+        <RelatoriosProfessor professorId={professorId} />
       ) : (
         <Card className="w-full">
           <CardHeader className="gap-2">

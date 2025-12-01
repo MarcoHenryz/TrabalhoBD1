@@ -35,7 +35,7 @@ public class QuestaoRepository {
             pst.setString(2, questao.getEnunciado());
             pst.setString(3, questao.getTema());
             pst.setString(4, questao.getTipo().name());
-            pst.setString(5, questao.getNivelDificuldade().name());
+            pst.setString(5, questao.getDificuldade().name());
             pst.setString(6, questao.getRespostaEsperada());
             pst.setObject(7, questao.getProfessorId());
 
@@ -97,7 +97,7 @@ public class QuestaoRepository {
             pst.setString(1, questao.getEnunciado());
             pst.setString(2, questao.getTema());
             pst.setString(3, questao.getTipo().name());
-            pst.setString(4, questao.getNivelDificuldade().name());
+            pst.setString(4, questao.getDificuldade().name());
             pst.setString(5, questao.getRespostaEsperada());
             pst.setObject(6, questao.getId());
 
@@ -122,7 +122,7 @@ public class QuestaoRepository {
         questao.setEnunciado(rs.getString("enunciado"));
         questao.setTema(rs.getString("tema"));
         questao.setTipo(TipoQuestao.valueOf(rs.getString("tipo")));
-        questao.setNivelDificuldade(Dificuldade.valueOf(rs.getString("dificuldade")));
+        questao.setDificuldade(Dificuldade.valueOf(rs.getString("dificuldade")));
         questao.setRespostaEsperada(rs.getString("resposta_esperada"));
         questao.setProfessorId(rs.getObject("professor_id", UUID.class));
         return questao;

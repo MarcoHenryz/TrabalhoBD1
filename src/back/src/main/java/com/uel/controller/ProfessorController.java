@@ -1,5 +1,6 @@
 package com.uel.controller;
 
+import com.uel.dto.ProvaTutorDTO;
 import com.uel.entity.Professor;
 import com.uel.service.ProfessorService;
 import java.sql.SQLException;
@@ -40,19 +41,37 @@ public class ProfessorController {
     }
 
     @GetMapping
-    public List<Professor> listar() {
-        try {
-            return professorService.listarTodos();
-        } catch (SQLException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar professores", e);
-        }
+  public List<Professor> listar() {
+    try {
+      return professorService.listarTodos();
+    } catch (SQLException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar professores", e);
     }
+  }
 
-    @GetMapping("/{id}")
-    public Professor buscar(@PathVariable UUID id) {
-        try {
-            Professor professor = professorService.buscarPorId(id);
-            if (professor == null) {
+  @GetMapping("/aluno/{alunoId}")
+  public List<Professor> listarPorAluno(@PathVariable UUID alunoId) {
+    try {
+      return professorService.listarPorAluno(alunoId);
+    } catch (SQLException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar tutores do aluno", e);
+    }
+  }
+
+  @GetMapping("/aluno/{alunoId}/provas")
+  public List<ProvaTutorDTO> listarTutoriasDoAluno(@PathVariable UUID alunoId) {
+    try {
+      return professorService.listarProvasComTutor(alunoId);
+    } catch (SQLException e) {
+      throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar tutores e provas do aluno", e);
+    }
+  }
+
+  @GetMapping("/{id}")
+  public Professor buscar(@PathVariable UUID id) {
+    try {
+      Professor professor = professorService.buscarPorId(id);
+      if (professor == null) {
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Professor não encontrado");
             }
             return professor;
