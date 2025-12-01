@@ -3,7 +3,7 @@ const API_URL =
   // @ts-expect-error bun/esbuild may expose import.meta.env
   (typeof import.meta !== "undefined" && (import.meta as any).env?.API_URL) ||
   (typeof window !== "undefined" && (window as any).__API_URL__) ||
-  "http://localhost:8081";
+  "http://localhost:8082";
 
 export interface Usuario {
   id: string;
@@ -345,6 +345,30 @@ export async function listarProfessoresPorAluno(alunoId: string): Promise<Profes
 
 export async function listarTutoriasDoAluno(alunoId: string): Promise<ProvaComTutor[]> {
   return fetchFromBackend(`/professores/aluno/${alunoId}/provas`);
+}
+
+// Funções para Relatórios de Aluno
+export interface DistribuicaoDificuldade {
+  dificuldade: Dificuldade;
+  totalQuestoes: number;
+  respondidas: number;
+  percentualRespondidas: number;
+  mediaNota?: number | null;
+}
+
+export async function listarDistribuicaoDificuldade(
+  alunoId: string,
+  params?: { meses?: number; professorId?: string }
+): Promise<DistribuicaoDificuldade[]> {
+  const search = new URLSearchParams();
+  if (params?.meses) {
+    search.set("meses", String(params.meses));
+  }
+  if (params?.professorId) {
+    search.set("professorId", params.professorId);
+  }
+  const query = search.toString();
+  return fetchFromBackend(`/relatorios/alunos/${alunoId}/dificuldades${query ? `?${query}` : ""}`);
 }
 
 // Funções para associar/desassociar alunos de avaliações

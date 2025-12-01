@@ -101,8 +101,11 @@ public class RespostaAlunoService {
 
         switch (questao.getTipo()) {
             case MULTIPLA_ESCOLHA:
-                Alternativa escolhida = alternativaRepository.buscarPorQuestaoId(
-                        resposta.getAlternativaEscolhidaId()).stream().findFirst().orElse(null);
+                List<Alternativa> alternativas = alternativaRepository.buscarPorQuestaoId(questao.getId());
+                Alternativa escolhida = alternativas.stream()
+                        .filter(alt -> alt.getId().equals(resposta.getAlternativaEscolhidaId()))
+                        .findFirst()
+                        .orElse(null);
 
                 if (escolhida != null && escolhida.getVerdadeiro()) {
                     nota = BigDecimal.ONE;

@@ -64,7 +64,7 @@ public class AvaliacaoQuestaoRepository {
                     questao.setEnunciado(rs.getString("enunciado"));
                     questao.setTema(rs.getString("tema"));
                     questao.setTipo(TipoQuestao.valueOf(rs.getString("tipo")));
-                    questao.setNivelDificuldade(Dificuldade.valueOf(rs.getString("dificuldade")));
+                    questao.setDificuldade(Dificuldade.valueOf(rs.getString("dificuldade")));
                     questao.setRespostaEsperada(rs.getString("resposta_esperada"));
                     questao.setProfessorId(rs.getObject("professor_id", UUID.class));
                     questoes.add(questao);

@@ -48,7 +48,7 @@ public class QuestaoService {
         questao.setEnunciado(enunciado);
         questao.setTema(tema);
         questao.setTipo(tipo);
-        questao.setNivelDificuldade(dificuldade);
+        questao.setDificuldade(dificuldade);
         questao.setRespostaEsperada(respostaEsperada);
         questao.setProfessorId(professorId);
 
@@ -124,7 +124,7 @@ public class QuestaoService {
             existente.setTipo(tipo);
         }
         if (dificuldade != null) {
-            existente.setNivelDificuldade(dificuldade);
+            existente.setDificuldade(dificuldade);
         }
         if (respostaEsperada != null) {
             existente.setRespostaEsperada(respostaEsperada);
