@@ -227,14 +227,14 @@ public class PopularBanco {
 
         System.out.println("\nCriando 2 avaliações e vinculando questões...");
         Avaliacao avaliacao1 = avaliacaoService.criar(
-            "Avaliação Fundamentos",
+            "Prova Fundamentos de Algoritmos",
             LocalDate.now().plusDays(7),
             LocalTime.of(9, 0),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao2 = avaliacaoService.criar(
-            "Avaliação Avançada",
+            "Prova Banco de Dados Aplicada",
             LocalDate.now().plusDays(14),
             LocalTime.of(19, 0),
             participacoes(alunos)
@@ -247,9 +247,9 @@ public class PopularBanco {
         adicionarQuestao(avaliacaoQuestaoService, avaliacao1, q4, 4);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao1, q5, 5);
 
-        // Avaliação 2 recebe as demais
-        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q6, 1);
-        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q7, 2);
+        // Avaliação 2 recebe as demais (primeira questão define o tutor responsável)
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q7, 1); // professor2 (dono)
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q6, 2);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q8, 3);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q9, 4);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q10, 5);

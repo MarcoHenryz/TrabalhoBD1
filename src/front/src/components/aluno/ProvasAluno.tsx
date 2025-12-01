@@ -3,20 +3,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  listarAvaliacoes,
+  listarAvaliacoesPorAluno,
   listarQuestoesAvaliacao,
   buscarQuestaoCompleta,
   listarRespostasAluno,
   responderQuestao,
+  listarTutoriasDoAluno,
   type Avaliacao,
   type QuestaoCompleta,
   type RespostaAluno,
   type ResponderQuestaoRequest,
+  type ProvaComTutor,
 } from "@/lib/apiprof";
 import { Loader2, Send, ClipboardList } from "lucide-react";
 
 type ProvasAlunoProps = {
   alunoId: string;
+  selectedAvaliacaoId: string | null;
+  onSelectAvaliacao: (id: string | null) => void;
 };
 
 type AvaliacaoAluno = Avaliacao & {
@@ -62,15 +66,43 @@ function formatarDificuldade(dificuldade: QuestaoCompleta["dificuldade"]) {
   }
 }
 
-export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
+function mapearTutores(resumo: ProvaComTutor[]) {
+  const acumulado: Record<string, { nomes: Set<string>; emails: Set<string> }> = {};
+
+  resumo.forEach((tutor) => {
+    const atual = acumulado[tutor.avaliacaoId] ?? { nomes: new Set<string>(), emails: new Set<string>() };
+
+    if (tutor.professorNome) {
+      atual.nomes.add(tutor.professorNome);
+    }
+    if (tutor.professorEmail) {
+      atual.emails.add(tutor.professorEmail);
+    }
+
+    acumulado[tutor.avaliacaoId] = atual;
+  });
+
+  const resposta: Record<string, { nomes: string; emails: string }> = {};
+  Object.entries(acumulado).forEach(([avaliacaoId, info]) => {
+    resposta[avaliacaoId] = {
+      nomes: info.nomes.size ? Array.from(info.nomes).join(", ") : "Tutores não informados",
+      emails: Array.from(info.emails).join(", "),
+    };
+  });
+
+  return resposta;
+}
+
+export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }: ProvasAlunoProps) {
   const [avaliacoes, setAvaliacoes] = useState<AvaliacaoAluno[]>([]);
-  const [avaliacaoSelecionadaId, setAvaliacaoSelecionadaId] = useState<string | null>(null);
+  const [avaliacaoSelecionadaId, setAvaliacaoSelecionadaId] = useState<string | null>(selectedAvaliacaoId);
   const [carregandoLista, setCarregandoLista] = useState(true);
   const [carregandoAvaliacaoId, setCarregandoAvaliacaoId] = useState<string | null>(null);
   const [respondendoQuestaoId, setRespondendoQuestaoId] = useState<string | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState<string | null>(null);
   const [respostasEmEdicao, setRespostasEmEdicao] = useState<Record<string, RespostaEmEdicao>>({});
+  const [tutoresPorAvaliacao, setTutoresPorAvaliacao] = useState<Record<string, { nomes: string; emails: string }>>({});
 
   const avaliacaoSelecionada = useMemo(
     () => avaliacoes.find((a) => a.id === avaliacaoSelecionadaId),
@@ -81,19 +113,35 @@ export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
     carregarAvaliacoesDoAluno();
   }, [alunoId]);
 
+  useEffect(() => {
+    listarTutoriasDoAluno(alunoId)
+      .then((resposta) => setTutoresPorAvaliacao(mapearTutores(resposta)))
+      .catch(() => setTutoresPorAvaliacao({}));
+  }, [alunoId]);
+
+  useEffect(() => {
+    if (selectedAvaliacaoId) {
+      setAvaliacaoSelecionadaId(selectedAvaliacaoId);
+      carregarDetalhes(selectedAvaliacaoId);
+    }
+  }, [selectedAvaliacaoId]);
+
   const carregarAvaliacoesDoAluno = async () => {
     try {
       setCarregandoLista(true);
       setErro(null);
-      const lista = await listarAvaliacoes();
-      const apenasDoAluno = lista.filter((a) => a.participacoes?.some((p) => p.alunoId === alunoId));
+      const apenasDoAluno = await listarAvaliacoesPorAluno(alunoId);
       setAvaliacoes(apenasDoAluno);
 
-      if (apenasDoAluno.length > 0) {
-        setAvaliacaoSelecionadaId(apenasDoAluno[0].id);
-        await carregarDetalhes(apenasDoAluno[0].id, apenasDoAluno);
-      } else {
-        setAvaliacaoSelecionadaId(null);
+      const alvo = selectedAvaliacaoId && apenasDoAluno.some((a) => a.id === selectedAvaliacaoId)
+        ? selectedAvaliacaoId
+        : apenasDoAluno[0]?.id ?? null;
+
+      setAvaliacaoSelecionadaId(alvo);
+      onSelectAvaliacao(alvo);
+
+      if (alvo) {
+        await carregarDetalhes(alvo, apenasDoAluno);
       }
     } catch (error) {
       const mensagem = error instanceof Error ? error.message : "Erro ao carregar provas do aluno";
@@ -198,6 +246,7 @@ export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
             : a
         )
       );
+      onSelectAvaliacao(avaliacaoSelecionadaId);
       setRespostasEmEdicao((prev) => ({ ...prev, [questaoId]: {} }));
       setSucesso("Resposta enviada com sucesso!");
     } catch (error) {
@@ -213,6 +262,13 @@ export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
 
   const totalQuestoes = avaliacaoSelecionada?.questoes?.length ?? 0;
   const totalRespondidas = avaliacaoSelecionada?.respostas?.length ?? 0;
+
+  const infoTutoresDaAvaliacao = (avaliacao?: AvaliacaoAluno) => {
+    if (!avaliacao) return { nomes: "Tutores não informados", emails: "" };
+    const daApi = tutoresPorAvaliacao[avaliacao.id];
+    if (daApi) return daApi;
+    return { nomes: "Tutores não informados", emails: "" };
+  };
 
   if (carregandoLista) {
     return (
@@ -252,12 +308,21 @@ export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
         <CardHeader>
           <CardTitle className="text-xl">Suas provas</CardTitle>
           <CardDescription>Selecione uma avaliação para responder</CardDescription>
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" className="text-xs">
+              Alterar Tema
+            </Button>
+            <Button variant="ghost" size="sm" className="text-xs">
+              Configurações
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-3">
           {avaliacoes.map((avaliacao) => {
             const carregando = carregandoAvaliacaoId === avaliacao.id;
             const respondidas = avaliacao.respostas?.length ?? 0;
             const questoes = avaliacao.questoes?.length ?? 0;
+            const tutoresInfo = infoTutoresDaAvaliacao(avaliacao);
             return (
               <button
                 key={avaliacao.id}
@@ -268,6 +333,7 @@ export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
                   setErro(null);
                   setSucesso(null);
                   setAvaliacaoSelecionadaId(avaliacao.id);
+                  onSelectAvaliacao(avaliacao.id);
                   carregarDetalhes(avaliacao.id);
                 }}
               >
@@ -277,6 +343,8 @@ export function ProvasAluno({ alunoId }: ProvasAlunoProps) {
                     <p className="text-xs text-muted-foreground">
                       {formatarData(avaliacao.data)} · {avaliacao.horario}
                     </p>
+                    <p className="text-[11px] text-muted-foreground mt-1">{tutoresInfo.nomes}</p>
+                    {tutoresInfo.emails && <p className="text-[11px] text-muted-foreground">{tutoresInfo.emails}</p>}
                   </div>
                   {carregando ? (
                     <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />

@@ -8,10 +8,22 @@ import "./index.css";
 
 type View = "login" | "professor" | "aluno";
 
+function nomeAmigavel(email: string, prefixo?: string) {
+  const base = email.split("@")[0] || email;
+  const nome = base
+    .split(/[._-]/)
+    .filter(Boolean)
+    .map((parte) => parte.charAt(0).toUpperCase() + parte.slice(1))
+    .join(" ");
+  if (prefixo && nome) return `${prefixo} ${nome}`;
+  return nome || email;
+}
+
 export function App() {
   const [view, setView] = useState<View>("login");
   const [professorSection, setProfessorSection] = useState<ProfessorSection>("questoes");
   const [alunoTab, setAlunoTab] = useState<AlunoTab>("provasPendentes");
+  const [avaliacaoSelecionadaAlunoId, setAvaliacaoSelecionadaAlunoId] = useState<string | null>(null);
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [erroLogin, setErroLogin] = useState<string | null>(null);
 
@@ -28,7 +40,7 @@ export function App() {
 
   const alunoNav = useMemo(
     () => [
-      { key: "disciplinas" as AlunoTab, label: "Disciplinas matriculadas", todo: "TODO: listar disciplinas e docentes" },
+      { key: "tutores" as AlunoTab, label: "Tutores", todo: "Veja seus tutores e provas vinculadas" },
       { key: "provasPendentes" as AlunoTab, label: "Provas pendentes", todo: "Responda as avaliações disponíveis para você" },
       { key: "notas" as AlunoTab, label: "Notas", todo: "TODO: notas recentes e histórico" },
       { key: "relatorios" as AlunoTab, label: "Relatórios", todo: "TODO: relatórios individuais de progresso" },
@@ -65,13 +77,14 @@ export function App() {
     setView("login");
     setProfessorSection("questoes");
     setAlunoTab("provasPendentes");
+    setAvaliacaoSelecionadaAlunoId(null);
     setUsuarioLogado(null);
     setErroLogin(null);
   };
 
   if (view === "professor" && usuarioLogado) {
     const profile: ProfileInfo = {
-      name: "Prof. Placeholder",
+      name: nomeAmigavel(usuarioLogado.email, "Prof."),
       email: usuarioLogado.email,
       roleLabel: "Professor",
       dept: "Departamento X",
@@ -91,7 +104,7 @@ export function App() {
 
   if (view === "aluno" && usuarioLogado) {
     const profile: ProfileInfo = {
-      name: "Aluno Placeholder",
+      name: nomeAmigavel(usuarioLogado.email),
       email: usuarioLogado.email,
       roleLabel: "Aluno",
       dept: "Curso Y",
@@ -105,6 +118,8 @@ export function App() {
         profile={profile}
         onLogout={handleLogout}
         alunoId={usuarioLogado.alunoId!}
+        selectedAvaliacaoId={avaliacaoSelecionadaAlunoId}
+        onSelectAvaliacao={setAvaliacaoSelecionadaAlunoId}
       />
     );
   }

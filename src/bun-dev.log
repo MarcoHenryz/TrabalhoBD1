@@ -36,3 +36,69 @@ error: script "dev" was terminated by signal SIGTERM (Polite quit request)
 $ bun --hot src/index.tsx
 🚀 Server running at http://localhost:3000/
 Bundled page in 752ms: src/index.html
+Reloaded in 130ms: src/lib/apiprof.ts + 1 more
+6 | import { DisciplinasAluno } from "@/components/aluno/DisciplinasAluno";
+                                     ^
+error: Could not resolve: "@/components/aluno/DisciplinasAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:6:34
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 1029ms: src/index.html
+Reloaded in 94ms: src/App.tsx + 1 more
+6 | import { TutoresAluno } from "@/components/aluno/TutoresAluno";
+                                 ^
+error: Could not resolve: "@/components/aluno/TutoresAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:6:30
+6 | import { TutoresAluno } from "@/components/aluno/TutoresAluno";
+                                 ^
+error: Could not resolve: "@/components/aluno/TutoresAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:6:30
+6 | import { TutoresAluno } from "@/components/aluno/TutoresAluno";
+                                 ^
+error: Could not resolve: "@/components/aluno/TutoresAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:6:30
+6 | import { TutoresAluno } from "@/components/aluno/TutoresAluno";
+                                 ^
+error: Could not resolve: "@/components/aluno/TutoresAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:6:30
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 939ms: src/index.html
+Reloaded in 86ms: src/components/aluno/TutoresAluno.tsx + 1 more
+[x2] Reloaded in 84ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x3] Reloaded in 109ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x4] Reloaded in 90ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x5] Reloaded in 112ms: src/lib/apiprof.ts + 1 more
+[x6] Reloaded in 88ms: src/lib/apiprof.ts + 1 more
+[x7] Reloaded in 72ms: src/components/aluno/TutoresAluno.tsx + 1 more
+[x8] Reloaded in 85ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x9] Reloaded in 76ms: src/components/aluno/ProvasAluno.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 686ms: src/index.html
+Reloaded in 92ms: src/lib/apiprof.ts + 1 more
+[x2] Reloaded in 77ms: src/components/aluno/TutoresAluno.tsx + 1 more
+[browser] Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information. 
+
+Check the render method of `TutoresAluno`. 
+[x3] Reloaded in 121ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x4] Reloaded in 91ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x5] Reloaded in 103ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x6] Reloaded in 255ms: src/index.css
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 772ms: src/index.html
+Reloaded in 116ms: src/lib/apiprof.ts + 1 more
+[x2] Reloaded in 97ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x3] Reloaded in 99ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x4] Reloaded in 118ms: src/components/aluno/TutoresAluno.tsx + 1 more
+[x5] Reloaded in 97ms: src/components/aluno/TutoresAluno.tsx + 1 more
+[x6] Reloaded in 102ms: src/App.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 741ms: src/index.html

@@ -23,7 +23,7 @@
 }
 
 .sidebar {
-  @apply border-r bg-white/90 shadow-sm backdrop-blur-sm flex flex-col gap-6 px-5 py-6;
+  @apply border-r bg-white/90 shadow-sm backdrop-blur-sm flex flex-col gap-6 px-5 py-6 sticky top-0 h-screen;
 }
 
 .sidebar-header {

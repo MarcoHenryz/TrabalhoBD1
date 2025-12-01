@@ -237,6 +237,10 @@ export async function listarAvaliacoes(): Promise<Avaliacao[]> {
   return fetchFromBackend("/avaliacoes");
 }
 
+export async function listarAvaliacoesPorAluno(alunoId: string): Promise<Avaliacao[]> {
+  return fetchFromBackend(`/avaliacoes/aluno/${alunoId}`);
+}
+
 export async function deletarAvaliacao(id: string): Promise<void> {
   const res = await fetch(`${API_URL}/avaliacoes/${id}`, {
     method: "DELETE",
@@ -303,9 +307,44 @@ export interface Aluno {
   } | null;
 }
 
+export interface Professor {
+  id: string;
+  area: string;
+  usuario?: {
+    id: string;
+    email: string;
+  } | null;
+}
+
+export interface ProvaComTutor {
+  avaliacaoId: string;
+  descricao: string;
+  data: string;
+  horario: string;
+  totalQuestoes: number;
+  respondidas: number;
+  professorId: string;
+  professorEmail: string;
+  professorNome: string;
+  professorArea: string;
+}
+
 // Funções para Aluno
 export async function listarAlunos(): Promise<Aluno[]> {
   return fetchFromBackend("/alunos");
+}
+
+// Funções para Professor
+export async function listarProfessores(): Promise<Professor[]> {
+  return fetchFromBackend("/professores");
+}
+
+export async function listarProfessoresPorAluno(alunoId: string): Promise<Professor[]> {
+  return fetchFromBackend(`/professores/aluno/${alunoId}`);
+}
+
+export async function listarTutoriasDoAluno(alunoId: string): Promise<ProvaComTutor[]> {
+  return fetchFromBackend(`/professores/aluno/${alunoId}/provas`);
 }
 
 // Funções para associar/desassociar alunos de avaliações

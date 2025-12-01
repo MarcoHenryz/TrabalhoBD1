@@ -3,8 +3,9 @@ import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { ProvasAluno } from "@/components/aluno/ProvasAluno";
+import { TutoresAluno } from "@/components/aluno/TutoresAluno";
 
-export type AlunoTab = "disciplinas" | "provasPendentes" | "notas" | "relatorios";
+export type AlunoTab = "tutores" | "provasPendentes" | "notas" | "relatorios";
 
 type AlunoNavItem = {
   key: AlunoTab;
@@ -19,9 +20,20 @@ type AlunoViewProps = {
   profile: ProfileInfo;
   onLogout: () => void;
   alunoId: string;
+  selectedAvaliacaoId: string | null;
+  onSelectAvaliacao: (id: string | null) => void;
 };
 
-export function AlunoView({ navItems, activeTab, onSelectTab, profile, onLogout, alunoId }: AlunoViewProps) {
+export function AlunoView({
+  navItems,
+  activeTab,
+  onSelectTab,
+  profile,
+  onLogout,
+  alunoId,
+  selectedAvaliacaoId,
+  onSelectAvaliacao,
+}: AlunoViewProps) {
   const currentTab = navItems.find(item => item.key === activeTab)!;
 
   return (
@@ -35,7 +47,19 @@ export function AlunoView({ navItems, activeTab, onSelectTab, profile, onLogout,
       onLogout={onLogout}
     >
       {activeTab === "provasPendentes" ? (
-        <ProvasAluno alunoId={alunoId} />
+        <ProvasAluno
+          alunoId={alunoId}
+          selectedAvaliacaoId={selectedAvaliacaoId}
+          onSelectAvaliacao={onSelectAvaliacao}
+        />
+      ) : activeTab === "tutores" ? (
+        <TutoresAluno
+          alunoId={alunoId}
+          onOpenAvaliacao={(avaliacaoId) => {
+            onSelectAvaliacao(avaliacaoId);
+            onSelectTab("provasPendentes");
+          }}
+        />
       ) : (
         <Card className="w-full">
           <CardHeader className="gap-2">
