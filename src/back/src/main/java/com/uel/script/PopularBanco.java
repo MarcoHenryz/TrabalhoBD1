@@ -75,6 +75,7 @@ public class PopularBanco {
         removerUsuarioPorEmail(dataSource, "aluno2@email.com");
         removerUsuarioPorEmail(dataSource, "aluno3@email.com");
         removerUsuarioPorEmail(dataSource, "aluno4@email.com");
+        removerUsuarioPorEmail(dataSource, "aluno5@email.com");
 
         Usuario profUser1 = getOrCreateUsuario(usuarioService, "professor1@email.com", "senha");
         Professor professor1 = getOrCreateProfessor(professorService, profUser1, "Algoritmos");
@@ -87,16 +88,18 @@ public class PopularBanco {
         alunos.add(getOrCreateAluno(alunoService, usuarioService, "A0002", "aluno2@email.com"));
         alunos.add(getOrCreateAluno(alunoService, usuarioService, "A0003", "aluno3@email.com"));
         alunos.add(getOrCreateAluno(alunoService, usuarioService, "A0004", "aluno4@email.com"));
+        alunos.add(getOrCreateAluno(alunoService, usuarioService, "A0005", "aluno5@email.com"));
 
         alunoService.atualizarMedia(alunos.get(0).getId(), new BigDecimal("7.5"));
         alunoService.atualizarMedia(alunos.get(1).getId(), new BigDecimal("8.2"));
         alunoService.atualizarMedia(alunos.get(2).getId(), new BigDecimal("6.9"));
         alunoService.atualizarMedia(alunos.get(3).getId(), new BigDecimal("8.7"));
+        alunoService.atualizarMedia(alunos.get(4).getId(), new BigDecimal("7.9"));
 
         System.out.println("Professores: " + professor1.getId() + " e " + professor2.getId());
         System.out.println("Alunos criados: " + alunos.size());
 
-        System.out.println("\nCriando 10 questões...");
+        System.out.println("\nCriando 15 questões...");
         Questao q1 = questaoService.criar(
             "Qual a complexidade de tempo média da busca binária?",
             "Algoritmos",
@@ -223,9 +226,72 @@ public class PopularBanco {
             null
         );
 
+        Questao q11 = questaoService.criar(
+            "Para que serve o comando 'git branch'?",
+            "Controle de Versão",
+            TipoQuestao.MULTIPLA_ESCOLHA,
+            Dificuldade.FACIL,
+            null,
+            professor1.getId(),
+            List.of(
+                new AlternativaRequest("Criar ou listar ramificações", true),
+                new AlternativaRequest("Enviar código ao repositório remoto", false),
+                new AlternativaRequest("Mesclar duas branches", false)
+            ),
+            null
+        );
+
+        Questao q12 = questaoService.criar(
+            "A normalização de dados reduz redundância e anomalias de atualização.",
+            "Modelagem",
+            TipoQuestao.VOUF,
+            Dificuldade.FACIL,
+            null,
+            professor2.getId(),
+            null,
+            List.of(new VoufRequest("A afirmação é", true))
+        );
+
+        Questao q13 = questaoService.criar(
+            "Descreva brevemente as propriedades ACID de uma transação.",
+            "Transações",
+            TipoQuestao.DISSERTATIVA,
+            Dificuldade.MEDIO,
+            "Atomicidade, Consistência, Isolamento, Durabilidade",
+            professor2.getId(),
+            null,
+            null
+        );
+
+        Questao q14 = questaoService.criar(
+            "Qual estrutura de dados segue o princípio LIFO?",
+            "Estruturas de Dados",
+            TipoQuestao.MULTIPLA_ESCOLHA,
+            Dificuldade.FACIL,
+            null,
+            professor1.getId(),
+            List.of(
+                new AlternativaRequest("Pilha", true),
+                new AlternativaRequest("Fila", false),
+                new AlternativaRequest("Árvore", false)
+            ),
+            null
+        );
+
+        Questao q15 = questaoService.criar(
+            "É recomendável manter transações abertas por longos períodos.",
+            "Transações",
+            TipoQuestao.VOUF,
+            Dificuldade.MEDIO,
+            null,
+            professor2.getId(),
+            null,
+            List.of(new VoufRequest("A afirmação é", false))
+        );
+
         System.out.println("Questões criadas.");
 
-        System.out.println("\nCriando 2 avaliações e vinculando questões...");
+        System.out.println("\nCriando 5 avaliações e vinculando questões...");
         Avaliacao avaliacao1 = avaliacaoService.criar(
             "Prova Fundamentos de Algoritmos",
             LocalDate.now().plusDays(7),
@@ -240,6 +306,27 @@ public class PopularBanco {
             participacoes(alunos)
         );
 
+        Avaliacao avaliacao3 = avaliacaoService.criar(
+            "Prova Git e Modelagem de Dados",
+            LocalDate.now().plusDays(21),
+            LocalTime.of(10, 30),
+            participacoes(alunos)
+        );
+
+        Avaliacao avaliacao4 = avaliacaoService.criar(
+            "Revisão Integrada Algoritmos e BD",
+            LocalDate.now().plusDays(28),
+            LocalTime.of(8, 30),
+            participacoes(alunos)
+        );
+
+        Avaliacao avaliacao5 = avaliacaoService.criar(
+            "Prova SQL Consolidada",
+            LocalDate.now().plusDays(35),
+            LocalTime.of(18, 30),
+            participacoes(alunos)
+        );
+
         // Avaliação 1 recebe as 5 primeiras questões
         adicionarQuestao(avaliacaoQuestaoService, avaliacao1, q1, 1);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao1, q2, 2);
@@ -247,14 +334,40 @@ public class PopularBanco {
         adicionarQuestao(avaliacaoQuestaoService, avaliacao1, q4, 4);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao1, q5, 5);
 
-        // Avaliação 2 recebe as demais (primeira questão define o tutor responsável)
-        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q7, 1); // professor2 (dono)
-        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q6, 2);
+        // Avaliação 2 foca em desenvolvimento e otimização
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q6, 1);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q7, 2); // professor2 (dono)
         adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q8, 3);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q9, 4);
         adicionarQuestao(avaliacaoQuestaoService, avaliacao2, q10, 5);
 
-        System.out.println("Avaliações criadas: " + avaliacao1.getId() + " e " + avaliacao2.getId());
+        // Avaliação 3 mistura Git e modelagem
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao3, q11, 1);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao3, q12, 2);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao3, q13, 3);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao3, q14, 4);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao3, q15, 5);
+
+        // Avaliação 4 revisita conceitos anteriores
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao4, q1, 1);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao4, q6, 2);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao4, q8, 3);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao4, q12, 4);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao4, q14, 5);
+
+        // Avaliação 5 consolida SQL e fundamentos
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao5, q2, 1);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao5, q3, 2);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao5, q5, 3);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao5, q7, 4);
+        adicionarQuestao(avaliacaoQuestaoService, avaliacao5, q11, 5);
+
+        System.out.println("Avaliações criadas: "
+            + avaliacao1.getId() + ", "
+            + avaliacao2.getId() + ", "
+            + avaliacao3.getId() + ", "
+            + avaliacao4.getId() + " e "
+            + avaliacao5.getId());
 
         System.out.println("\nRegistrando respostas de alguns alunos (nem todos respondem tudo)...");
         Map<Questao, List<Alternativa>> alternativas = new HashMap<>();
@@ -262,11 +375,15 @@ public class PopularBanco {
         alternativas.put(q2, alternativaRepository.buscarPorQuestaoId(q2.getId()));
         alternativas.put(q7, alternativaRepository.buscarPorQuestaoId(q7.getId()));
         alternativas.put(q8, alternativaRepository.buscarPorQuestaoId(q8.getId()));
+        alternativas.put(q11, alternativaRepository.buscarPorQuestaoId(q11.getId()));
+        alternativas.put(q14, alternativaRepository.buscarPorQuestaoId(q14.getId()));
 
         Map<Questao, List<Vouf>> itensVouf = new HashMap<>();
         itensVouf.put(q3, voufRepository.buscarPorQuestaoId(q3.getId()));
         itensVouf.put(q4, voufRepository.buscarPorQuestaoId(q4.getId()));
         itensVouf.put(q9, voufRepository.buscarPorQuestaoId(q9.getId()));
+        itensVouf.put(q12, voufRepository.buscarPorQuestaoId(q12.getId()));
+        itensVouf.put(q15, voufRepository.buscarPorQuestaoId(q15.getId()));
 
         // Avaliação 1 respostas
         respostaAlunoService.responderQuestao(avaliacao1.getId(), alunos.get(0).getId(), q1.getId(), alternativaCorreta(alternativas.get(q1)), null, null, null);
@@ -281,6 +398,8 @@ public class PopularBanco {
         respostaAlunoService.responderQuestao(avaliacao1.getId(), alunos.get(2).getId(), q2.getId(), alternativaErrada(alternativas.get(q2)), null, null, null);
 
         respostaAlunoService.responderQuestao(avaliacao1.getId(), alunos.get(3).getId(), q3.getId(), null, itensVouf.get(q3).getFirst().getId(), true, null);
+
+        respostaAlunoService.responderQuestao(avaliacao1.getId(), alunos.get(4).getId(), q2.getId(), alternativaCorreta(alternativas.get(q2)), null, null, null);
 
         // Avaliação 2 respostas
         respostaAlunoService.responderQuestao(avaliacao2.getId(), alunos.get(0).getId(), q6.getId(), null, null, null, "Permite colaboração segura e histórico de mudanças.");
@@ -297,10 +416,38 @@ public class PopularBanco {
         respostaAlunoService.responderQuestao(avaliacao2.getId(), alunos.get(3).getId(), q7.getId(), alternativaCorreta(alternativas.get(q7)), null, null, null);
         respostaAlunoService.responderQuestao(avaliacao2.getId(), alunos.get(3).getId(), q8.getId(), alternativaCorreta(alternativas.get(q8)), null, null, null);
 
+        respostaAlunoService.responderQuestao(avaliacao2.getId(), alunos.get(4).getId(), q8.getId(), alternativaCorreta(alternativas.get(q8)), null, null, null);
+
+        // Avaliação 3 respostas
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(0).getId(), q11.getId(), alternativaCorreta(alternativas.get(q11)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(0).getId(), q12.getId(), null, itensVouf.get(q12).getFirst().getId(), true, null);
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(0).getId(), q13.getId(), null, null, null, "ACID garante atomicidade, consistência, isolamento e durabilidade.");
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(0).getId(), q14.getId(), alternativaCorreta(alternativas.get(q14)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(0).getId(), q15.getId(), null, itensVouf.get(q15).getFirst().getId(), false, null);
+
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(4).getId(), q11.getId(), alternativaErrada(alternativas.get(q11)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao3.getId(), alunos.get(4).getId(), q14.getId(), alternativaCorreta(alternativas.get(q14)), null, null, null);
+
+        // Avaliação 4 respostas
+        respostaAlunoService.responderQuestao(avaliacao4.getId(), alunos.get(1).getId(), q1.getId(), alternativaCorreta(alternativas.get(q1)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao4.getId(), alunos.get(1).getId(), q6.getId(), null, null, null, "Controle de versão guarda histórico e facilita auditoria.");
+        respostaAlunoService.responderQuestao(avaliacao4.getId(), alunos.get(1).getId(), q12.getId(), null, itensVouf.get(q12).getFirst().getId(), true, null);
+
+        respostaAlunoService.responderQuestao(avaliacao4.getId(), alunos.get(2).getId(), q8.getId(), alternativaCorreta(alternativas.get(q8)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao4.getId(), alunos.get(2).getId(), q14.getId(), alternativaCorreta(alternativas.get(q14)), null, null, null);
+
+        // Avaliação 5 respostas
+        respostaAlunoService.responderQuestao(avaliacao5.getId(), alunos.get(2).getId(), q2.getId(), alternativaCorreta(alternativas.get(q2)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao5.getId(), alunos.get(2).getId(), q3.getId(), null, itensVouf.get(q3).getFirst().getId(), true, null);
+        respostaAlunoService.responderQuestao(avaliacao5.getId(), alunos.get(2).getId(), q5.getId(), null, null, null, "Elimina dependências transitivas e redundâncias.");
+
+        respostaAlunoService.responderQuestao(avaliacao5.getId(), alunos.get(3).getId(), q7.getId(), alternativaErrada(alternativas.get(q7)), null, null, null);
+        respostaAlunoService.responderQuestao(avaliacao5.getId(), alunos.get(3).getId(), q11.getId(), alternativaCorreta(alternativas.get(q11)), null, null, null);
+
         System.out.println("\n=== População concluída com sucesso! ===");
         System.out.println("Credenciais de teste:");
         System.out.println("  Professores: professor1@email.com / senha | professor2@email.com / senha");
-        System.out.println("  Alunos: aluno1@email.com ... aluno4@email.com (senha para todos: senha)");
+        System.out.println("  Alunos: aluno1@email.com ... aluno5@email.com (senha para todos: senha)");
 
       } catch (SQLException e) {
         System.err.println("Erro ao popular banco: " + e.getMessage());
