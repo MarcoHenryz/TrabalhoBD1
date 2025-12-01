@@ -102,3 +102,225 @@ error: script "dev" was terminated by signal SIGTERM (Polite quit request)
 $ bun --hot src/index.tsx
 🚀 Server running at http://localhost:3000/
 Bundled page in 741ms: src/index.html
+Reloaded in 98ms: src/lib/apiprof.ts + 1 more
+7 | import { NotasAluno } from "@/components/aluno/NotasAluno";
+                               ^
+error: Could not resolve: "@/components/aluno/NotasAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:7:28
+7 | import { NotasAluno } from "@/components/aluno/NotasAluno";
+                               ^
+error: Could not resolve: "@/components/aluno/NotasAluno". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/AlunoView.tsx:7:28
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 687ms: src/index.html
+Reloaded in 113ms: src/components/layout/ProfileMenu.tsx + 1 more
+[x2] Reloaded in 94ms: src/components/layout/Topbar.tsx + 1 more
+[x3] Reloaded in 72ms: src/components/layout/DashboardLayout.tsx + 1 more
+[x4] Reloaded in 69ms: src/views/ProfessorView.tsx + 1 more
+[x5] Reloaded in 79ms: src/views/AlunoView.tsx + 1 more
+[x6] Reloaded in 78ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x7] Reloaded in 81ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x8] Reloaded in 93ms: src/components/aluno/NotasAluno.tsx + 1 more
+[x9] Reloaded in 111ms: src/components/aluno/NotasAluno.tsx + 1 more
+[x10] Reloaded in 88ms: src/components/aluno/NotasAluno.tsx + 1 more
+[x11] Reloaded in 78ms: src/components/aluno/NotasAluno.tsx + 1 more
+[x12] Reloaded in 70ms: src/App.tsx + 1 more
+[x13] Reloaded in 97ms: src/App.tsx + 1 more
+[x14] Reloaded in 80ms: src/App.tsx + 1 more
+[x15] Reloaded in 70ms: src/App.tsx + 1 more
+[x16] Reloaded in 76ms: src/App.tsx + 1 more
+[x17] Reloaded in 70ms: src/App.tsx + 1 more
+[x18] Reloaded in 117ms: src/components/aluno/NotasAluno.tsx + 1 more
+[x19] Reloaded in 75ms: src/components/aluno/NotasAluno.tsx + 1 more
+[x20] Reloaded in 72ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x21] Reloaded in 81ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x22] Reloaded in 98ms: src/components/layout/ProfileMenu.tsx + 1 more
+[x23] Reloaded in 179ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x24] Reloaded in 83ms: src/components/layout/ProfileMenu.tsx + 1 more
+[browser] ReferenceError: profile is not defined
+    at self.<computed>.src/components/layout/ProfileMenu.tsx (blob:http://localhost:3000/100dc665-a4e3-419d-924c-1712c55e6dc2:235:9)
+    at CY (http://localhost:3000/_bun/client/index-0000000070019585.js:21:8972)
+    at m (http://localhost:3000/_bun/client/index-0000000070019585.js:21:8863)
+    at G0 (http://localhost:3000/_bun/client/index-0000000070019585.js:24:383)
+    at globalThis.<computed> (http://localhost:3000/_bun/client/index-0000000070019585.js:24:3493)
+    at blob:http://localhost:3000/100dc665-a4e3-419d-924c-1712c55e6dc2:1:28
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-00000000f592cef8.js:63703:9)
+      at CY (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000f592cef8.js:21:9284)
+    from browser tab http://localhost:3000/
+[x25] Reloaded in 90ms: src/components/layout/ProfileMenu.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-000000002c35f315.js:63702:9)
+      at CY (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-000000002c35f315.js:21:9284)
+    from browser tab http://localhost:3000/
+[x26] Reloaded in 250ms: src/index.css
+[x27] Reloaded in 101ms: src/components/layout/ProfileMenu.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-0000000062e0d836.js:63706:9)
+      at CY (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000062e0d836.js:21:9284)
+    from browser tab http://localhost:3000/
+[x28] Reloaded in 109ms: src/components/layout/Sidebar.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:63706:9)
+      at CY (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000d5b2efb4.js:21:9284)
+    from browser tab http://localhost:3000/
+[x29] Reloaded in 121ms: src/components/layout/DashboardLayout.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:63710:9)
+      at CY (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000026e4d6cd.js:21:9284)
+    from browser tab http://localhost:3000/
+[x30] Reloaded in 75ms: src/views/ProfessorView.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:63714:9)
+      at CY (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-0000000076d9a9f4.js:21:9284)
+    from browser tab http://localhost:3000/
+[x31] Reloaded in 119ms: src/views/AlunoView.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-000000008acfac70.js:63714:9)
+      at CY (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-000000008acfac70.js:21:9284)
+    from browser tab http://localhost:3000/
+[x32] Reloaded in 87ms: src/App.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-00000000385b6af3.js:63716:9)
+      at CY (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000385b6af3.js:21:9284)
+    from browser tab http://localhost:3000/
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 883ms: src/index.html
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:63716:9)
+      at CY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+    from browser tab http://localhost:3000/
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:63716:9)
+      at CY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000bc4eca4e.js:21:9284)
+    from browser tab http://localhost:3000/
+Reloaded in 80ms: src/components/layout/ProfileMenu.tsx + 1 more
+[31mfrontend[0m ReferenceError: profile is not defined
+      at src/components/layout/ProfileMenu.tsx (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:63720:9)
+      at CY (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:8972)
+      at m (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:8863)
+      at lY (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:9284)
+      at m (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:8771)
+      at lY (http://localhost:3000/_bun/client/index-00000000b4fd764b.js:21:9284)
+    from browser tab http://localhost:3000/
+[x2] Reloaded in 99ms: src/components/layout/ProfileMenu.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 991ms: src/index.html
+Reloaded in 103ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x2] Reloaded in 88ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x3] Reloaded in 92ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x4] Reloaded in 78ms: src/views/AlunoView.tsx + 1 more
+error: Cannot apply unknown utility class `via-[color:color-mix(in`
+    at /home/roger/uel/banco/notaki/src/front/src/index.css:0
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+error: Cannot apply unknown utility class `via-[color:color-mix(in`
+    at /home/roger/uel/banco/notaki/src/front/src/index.css:0
+error: Cannot apply unknown utility class `via-[color:color-mix(in`
+    at /home/roger/uel/banco/notaki/src/front/src/index.css:0
+error: Cannot apply unknown utility class `via-[color:color-mix(in`
+    at /home/roger/uel/banco/notaki/src/front/src/index.css:0
+error: Cannot apply unknown utility class `via-[color:color-mix(in`
+    at /home/roger/uel/banco/notaki/src/front/src/index.css:0
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 1094ms: src/index.html
+Reloaded in 111ms: src/components/layout/ProfileMenu.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 1355ms: src/index.html
+Reloaded in 139ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x2] Reloaded in 90ms: src/components/aluno/ProvasAluno.tsx + 1 more

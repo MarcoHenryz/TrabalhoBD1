@@ -6,7 +6,11 @@
   }
 
   body {
-    @apply min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 text-foreground antialiased;
+    @apply min-h-screen text-foreground antialiased bg-background;
+    background:
+      radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--background) 80%, var(--primary) 10%), transparent 55%),
+      radial-gradient(circle at 80% 0%, color-mix(in srgb, var(--background) 78%, var(--primary) 12%), transparent 45%),
+      var(--background);
   }
 }
 
@@ -15,15 +19,21 @@
 }
 
 .panel {
-  @apply rounded-lg border bg-muted/40 p-6 shadow-inner;
+  @apply rounded-lg border bg-card/70 p-6 shadow-inner;
 }
 
 .dashboard {
-  @apply min-h-screen w-full grid grid-cols-[260px_1fr] bg-gradient-to-br from-slate-50 via-white to-slate-100;
+  @apply min-h-screen w-full grid grid-cols-[260px_1fr];
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--background) 100%, transparent 0%),
+    color-mix(in srgb, var(--background) 86%, transparent 14%),
+    color-mix(in srgb, var(--background) 100%, transparent 30%)
+  );
 }
 
 .sidebar {
-  @apply border-r bg-white/90 shadow-sm backdrop-blur-sm flex flex-col gap-6 px-5 py-6 sticky top-0 h-screen;
+  @apply border-r bg-card/90 shadow-sm backdrop-blur-sm flex flex-col gap-6 px-5 py-6 sticky top-0 h-screen;
 }
 
 .sidebar-header {
@@ -40,20 +50,21 @@
 
 .content {
   @apply min-h-screen w-full px-6 py-6 flex flex-col gap-6;
+  background-color: color-mix(in srgb, var(--background) 92%, transparent);
 }
 
 .topbar {
-  @apply flex items-center justify-between rounded-xl border bg-white/90 px-4 py-3 shadow-sm backdrop-blur;
+  @apply flex items-center justify-between rounded-xl border bg-card/90 px-4 py-3 shadow-sm backdrop-blur;
 }
 
 .avatar {
-  @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary;
+  @apply inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/15 text-sm font-semibold text-primary;
 }
 
 .profile-popover {
-  @apply absolute right-0 mt-2 w-64 rounded-xl border bg-white p-4 shadow-lg;
+  @apply absolute right-0 mt-2 w-64 rounded-xl border bg-card p-4 shadow-lg;
 }
 
 .placeholder-panel {
-  @apply rounded-lg border bg-white/60 shadow-inner;
+  @apply rounded-lg border bg-card/70 shadow-inner;
 }

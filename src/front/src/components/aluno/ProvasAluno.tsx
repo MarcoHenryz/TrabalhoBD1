@@ -308,14 +308,6 @@ export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }:
         <CardHeader>
           <CardTitle className="text-xl">Suas provas</CardTitle>
           <CardDescription>Selecione uma avaliação para responder</CardDescription>
-          <div className="flex gap-2">
-            <Button variant="ghost" size="sm" className="text-xs">
-              Alterar Tema
-            </Button>
-            <Button variant="ghost" size="sm" className="text-xs">
-              Configurações
-            </Button>
-          </div>
         </CardHeader>
         <CardContent className="space-y-3">
           {avaliacoes.map((avaliacao) => {
@@ -327,7 +319,7 @@ export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }:
               <button
                 key={avaliacao.id}
                 className={`w-full rounded-lg border p-4 text-left transition hover:border-primary hover:bg-primary/5 ${
-                  avaliacaoSelecionadaId === avaliacao.id ? "border-primary bg-primary/5" : "border-muted-foreground/20 bg-white/80"
+                  avaliacaoSelecionadaId === avaliacao.id ? "border-primary bg-primary/5" : "border-border bg-card/90"
                 }`}
                 onClick={() => {
                   setErro(null);
@@ -374,7 +366,7 @@ export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }:
               </CardDescription>
             </div>
             {avaliacaoSelecionada && (
-              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-200">
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-100 dark:border-emerald-500/30">
                 {totalRespondidas}/{totalQuestoes || "?"} respondidas
               </span>
             )}
@@ -385,7 +377,7 @@ export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }:
             </div>
           )}
           {sucesso && (
-            <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            <div className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
               {sucesso}
             </div>
           )}
@@ -421,7 +413,7 @@ export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }:
             );
 
             return (
-              <div key={questao.id} className="rounded-lg border bg-white/70 p-4 space-y-3 shadow-sm">
+              <div key={questao.id} className="rounded-lg border bg-card/90 p-4 space-y-3 shadow-sm">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
@@ -432,24 +424,24 @@ export function ProvasAluno({ alunoId, selectedAvaliacaoId, onSelectAvaliacao }:
                       Tema: {questao.tema} · Dificuldade: {formatarDificuldade(questao.dificuldade)}
                     </p>
                   </div>
-                  <span
-                    className={`rounded-full px-3 py-1 text-xs font-medium border ${
-                      respostaAnterior
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                        : "border-amber-200 bg-amber-50 text-amber-700"
-                    }`}
-                  >
-                    {respostaAnterior ? "Respondida" : "Pendente"}
-                  </span>
-                </div>
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-medium border ${
+                  respostaAnterior
+                    ? "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100"
+                    : "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100"
+                }`}
+              >
+                {respostaAnterior ? "Respondida" : "Pendente"}
+              </span>
+            </div>
 
-                {respostaAnterior ? (
-                  <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-                    <p className="font-semibold">Sua resposta:</p>
-                    {questao.tipo === "MULTIPLA_ESCOLHA" && (
-                      <p>{alternativaSelecionada?.alternativa || "Alternativa enviada"}</p>
-                    )}
-                    {questao.tipo === "VOUF" && (
+            {respostaAnterior ? (
+              <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
+                <p className="font-semibold">Sua resposta:</p>
+                {questao.tipo === "MULTIPLA_ESCOLHA" && (
+                  <p>{alternativaSelecionada?.alternativa || "Alternativa enviada"}</p>
+                )}
+                {questao.tipo === "VOUF" && (
                       <p>
                         {itemVoufSelecionado?.item ?? "Item"} — {respostaAnterior.voufResposta ? "Verdadeiro" : "Falso"}
                       </p>

@@ -4,6 +4,7 @@ import { PlaceholderGrid } from "@/components/layout/PlaceholderGrid";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { ProvasAluno } from "@/components/aluno/ProvasAluno";
 import { TutoresAluno } from "@/components/aluno/TutoresAluno";
+import { NotasAluno } from "@/components/aluno/NotasAluno";
 
 export type AlunoTab = "tutores" | "provasPendentes" | "notas" | "relatorios";
 
@@ -22,6 +23,9 @@ type AlunoViewProps = {
   alunoId: string;
   selectedAvaliacaoId: string | null;
   onSelectAvaliacao: (id: string | null) => void;
+  onUpdateProfile: (data: { name?: string; avatar?: string | null }) => void;
+  theme: "light" | "dark";
+  onToggleTheme: () => void;
 };
 
 export function AlunoView({
@@ -30,9 +34,12 @@ export function AlunoView({
   onSelectTab,
   profile,
   onLogout,
+  onUpdateProfile,
   alunoId,
   selectedAvaliacaoId,
   onSelectAvaliacao,
+  theme,
+  onToggleTheme,
 }: AlunoViewProps) {
   const currentTab = navItems.find(item => item.key === activeTab)!;
 
@@ -45,6 +52,9 @@ export function AlunoView({
       onSelect={onSelectTab}
       profile={profile}
       onLogout={onLogout}
+      onUpdateProfile={onUpdateProfile}
+      theme={theme}
+      onToggleTheme={onToggleTheme}
     >
       {activeTab === "provasPendentes" ? (
         <ProvasAluno
@@ -59,6 +69,12 @@ export function AlunoView({
             onSelectAvaliacao(avaliacaoId);
             onSelectTab("provasPendentes");
           }}
+        />
+      ) : activeTab === "notas" ? (
+        <NotasAluno
+          alunoId={alunoId}
+          selectedAvaliacaoId={selectedAvaliacaoId}
+          onSelectAvaliacao={onSelectAvaliacao}
         />
       ) : (
         <Card className="w-full">

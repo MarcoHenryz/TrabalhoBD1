@@ -114,7 +114,7 @@ export function TutoresAluno({ alunoId, onOpenAvaliacao }: TutoresAlunoProps) {
         {tutores.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2">
             {tutores.map((tutor) => (
-              <div key={tutor.professorId} className="rounded-lg border bg-white/70 p-4 shadow-sm">
+              <div key={tutor.professorId} className="rounded-lg border bg-card/90 p-4 shadow-sm">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">Tutor</p>
@@ -137,7 +137,7 @@ export function TutoresAluno({ alunoId, onOpenAvaliacao }: TutoresAlunoProps) {
                     return (
                       <button
                         key={avaliacao.avaliacaoId}
-                        className="w-full rounded-md border border-slate-200 bg-white/80 p-3 text-left transition hover:border-primary hover:bg-primary/5"
+                        className="w-full rounded-md border border-border bg-card p-3 text-left transition hover:border-primary hover:bg-primary/5"
                         onClick={() => onOpenAvaliacao(avaliacao.avaliacaoId)}
                       >
                         <div className="flex items-center justify-between gap-2">

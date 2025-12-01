@@ -422,3 +422,9 @@ export async function responderQuestao(request: ResponderQuestaoRequest): Promis
 
   return res.json();
 }
+
+export async function buscarNotaFinalAvaliacao(avaliacaoId: string, alunoId: string): Promise<number> {
+  const nota = await fetchFromBackend<number | string>(`/respostas/avaliacao/${avaliacaoId}/aluno/${alunoId}/nota-final`);
+  const valor = typeof nota === "string" ? Number(nota) : nota;
+  return Number.isFinite(valor) ? Number(valor) : 0;
+}

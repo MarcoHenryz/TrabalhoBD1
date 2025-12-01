@@ -16,6 +16,9 @@ type DashboardLayoutProps<T extends string> = {
   onSelect: (key: T) => void;
   profile: ProfileInfo;
   onLogout: () => void;
+  onUpdateProfile: (data: { name?: string; avatar?: string | null }) => void;
+  theme: "light" | "dark";
+  onToggleTheme: () => void;
   children: ReactNode;
 };
 
@@ -27,13 +30,29 @@ export function DashboardLayout<T extends string>({
   onSelect,
   profile,
   onLogout,
+  onUpdateProfile,
+  theme,
+  onToggleTheme,
   children,
 }: DashboardLayoutProps<T>) {
   return (
     <div className="dashboard">
-      <Sidebar title="Notaki" navItems={navItems} activeKey={activeKey} onSelect={onSelect} />
+      <Sidebar
+        title="Notaki"
+        navItems={navItems}
+        activeKey={activeKey}
+        onSelect={onSelect}
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+      />
       <main className="content">
-        <Topbar title={title} subtitle={subtitle} profile={profile} onLogout={onLogout} />
+        <Topbar
+          title={title}
+          subtitle={subtitle}
+          profile={profile}
+          onLogout={onLogout}
+          onUpdateProfile={onUpdateProfile}
+        />
         {children}
       </main>
     </div>

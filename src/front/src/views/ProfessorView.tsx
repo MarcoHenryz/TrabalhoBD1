@@ -22,10 +22,23 @@ type ProfessorViewProps = {
   onSelectSection: (key: ProfessorSection) => void;
   profile: ProfileInfo;
   onLogout: () => void;
+  onUpdateProfile: (data: { name?: string; avatar?: string | null }) => void;
+  theme: "light" | "dark";
+  onToggleTheme: () => void;
   professorId: string;
 };
 
-export function ProfessorView({ navItems, activeSection, onSelectSection, profile, onLogout, professorId }: ProfessorViewProps) {
+export function ProfessorView({
+  navItems,
+  activeSection,
+  onSelectSection,
+  profile,
+  onLogout,
+  onUpdateProfile,
+  theme,
+  onToggleTheme,
+  professorId,
+}: ProfessorViewProps) {
   const currentSection = navItems.find(item => item.key === activeSection)!;
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -73,6 +86,9 @@ export function ProfessorView({ navItems, activeSection, onSelectSection, profil
       onSelect={onSelectSection}
       profile={profile}
       onLogout={onLogout}
+      onUpdateProfile={onUpdateProfile}
+      theme={theme}
+      onToggleTheme={onToggleTheme}
     >
       {activeSection === "questoes" ? (
         <div className="space-y-6">

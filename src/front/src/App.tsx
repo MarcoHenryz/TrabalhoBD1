@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import type { ProfileInfo } from "@/components/layout/ProfileMenu";
 import { AlunoView, type AlunoTab } from "@/views/AlunoView";
 import { LoginView } from "@/views/LoginView";
@@ -25,7 +25,24 @@ export function App() {
   const [alunoTab, setAlunoTab] = useState<AlunoTab>("provasPendentes");
   const [avaliacaoSelecionadaAlunoId, setAvaliacaoSelecionadaAlunoId] = useState<string | null>(null);
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
+  const [profile, setProfile] = useState<ProfileInfo | null>(null);
   const [erroLogin, setErroLogin] = useState<string | null>(null);
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    if (typeof window === "undefined") return "light";
+    const saved = window.localStorage.getItem("theme");
+    if (saved === "dark" || saved === "light") return saved;
+    const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return prefersDark ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    }
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("theme", theme);
+    }
+  }, [theme]);
 
   const professorNav = useMemo(
     () => [
@@ -42,7 +59,7 @@ export function App() {
     () => [
       { key: "tutores" as AlunoTab, label: "Tutores", todo: "Veja seus tutores e provas vinculadas" },
       { key: "provasPendentes" as AlunoTab, label: "Provas pendentes", todo: "Responda as avaliações disponíveis para você" },
-      { key: "notas" as AlunoTab, label: "Notas", todo: "TODO: notas recentes e histórico" },
+      { key: "notas" as AlunoTab, label: "Notas", todo: "Acompanhe notas, correções e histórico" },
       { key: "relatorios" as AlunoTab, label: "Relatórios", todo: "TODO: relatórios individuais de progresso" },
     ],
     [],
@@ -59,6 +76,15 @@ export function App() {
     try {
       const usuario = await login(email, senha);
       setUsuarioLogado(usuario);
+      
+      const baseProfile: ProfileInfo = {
+        name: nomeAmigavel(usuario.email, usuario.professorId ? "Prof." : undefined),
+        email: usuario.email,
+        roleLabel: usuario.professorId ? "Professor" : "Aluno",
+        dept: usuario.professorId ? "Departamento X" : "Curso Y",
+        avatar: null,
+      };
+      setProfile(baseProfile);
       
       // Determina se é professor ou aluno baseado nos IDs
       if (usuario.professorId) {
@@ -79,17 +105,17 @@ export function App() {
     setAlunoTab("provasPendentes");
     setAvaliacaoSelecionadaAlunoId(null);
     setUsuarioLogado(null);
+    setProfile(null);
     setErroLogin(null);
   };
 
-  if (view === "professor" && usuarioLogado) {
-    const profile: ProfileInfo = {
-      name: nomeAmigavel(usuarioLogado.email, "Prof."),
-      email: usuarioLogado.email,
-      roleLabel: "Professor",
-      dept: "Departamento X",
-    };
+  const handleProfileUpdate = (data: { name?: string; avatar?: string | null }) => {
+    setProfile((prev) => (prev ? { ...prev, ...data, name: data.name ?? prev.name } : prev));
+  };
 
+  const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+
+  if (view === "professor" && usuarioLogado && profile) {
     return (
       <ProfessorView
         navItems={professorNav}
@@ -97,18 +123,15 @@ export function App() {
         onSelectSection={setProfessorSection}
         profile={profile}
         onLogout={handleLogout}
+        onUpdateProfile={handleProfileUpdate}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         professorId={usuarioLogado.professorId!}
       />
     );
   }
 
-  if (view === "aluno" && usuarioLogado) {
-    const profile: ProfileInfo = {
-      name: nomeAmigavel(usuarioLogado.email),
-      email: usuarioLogado.email,
-      roleLabel: "Aluno",
-      dept: "Curso Y",
-    };
+  if (view === "aluno" && usuarioLogado && profile) {
 
     return (
       <AlunoView
@@ -117,6 +140,9 @@ export function App() {
         onSelectTab={setAlunoTab}
         profile={profile}
         onLogout={handleLogout}
+        onUpdateProfile={handleProfileUpdate}
+        theme={theme}
+        onToggleTheme={toggleTheme}
         alunoId={usuarioLogado.alunoId!}
         selectedAvaliacaoId={avaliacaoSelecionadaAlunoId}
         onSelectAvaliacao={setAvaliacaoSelecionadaAlunoId}
