@@ -452,3 +452,117 @@ export async function buscarNotaFinalAvaliacao(avaliacaoId: string, alunoId: str
   const valor = typeof nota === "string" ? Number(nota) : nota;
   return Number.isFinite(valor) ? Number(valor) : 0;
 }
+
+// Relatórios do Professor
+export interface ResumoProfessor {
+  totalAvaliacoes: number;
+  totalAlunosImpactados: number;
+  mediaGeral: number;
+  melhorNota: number;
+  piorNota: number;
+  respostasCorrigidas: number;
+}
+
+export interface AvaliacaoDesempenho {
+  avaliacaoId: string;
+  descricao: string;
+  data: string;
+  mediaNota: number;
+  maiorNota: number;
+  menorNota: number;
+  respondentes: number;
+}
+
+export interface AlunoComparativo {
+  alunoId: string;
+  matricula: string;
+  email: string;
+  media: number;
+  melhorNota: number;
+  piorNota: number;
+  avaliacoesRespondidas: number;
+}
+
+export interface QuestaoDesafio {
+  questaoId: string;
+  enunciado: string;
+  tema: string;
+  dificuldade: Dificuldade;
+  mediaNota: number;
+  totalRespostas: number;
+  percentualAcerto?: number | null;
+}
+
+export interface RankingProfessor {
+  professorId: string;
+  nome: string;
+  email: string;
+  area: string;
+  mediaAcertos: number;
+  respostasCorrigidas: number;
+}
+
+export interface RelatorioProfessorPayload {
+  resumo: ResumoProfessor;
+  avaliacoes: AvaliacaoDesempenho[];
+  alunos: AlunoComparativo[];
+  questoesCriticas: QuestaoDesafio[];
+  rankingProfessores: RankingProfessor[];
+}
+
+export async function buscarRelatorioProfessor(
+  professorId: string,
+  params?: { meses?: number }
+): Promise<RelatorioProfessorPayload> {
+  const search = new URLSearchParams();
+  if (params?.meses) {
+    search.set("meses", String(params.meses));
+  }
+  const query = search.toString();
+  return fetchFromBackend(`/relatorios/professores/${professorId}/painel${query ? `?${query}` : ""}`);
+}
+
+// Correção de dissertativas
+export type StatusCorrecao = "pendentes" | "corrigidas" | "todas";
+
+export interface CorrecaoDissertativa {
+  respostaId: string;
+  avaliacaoId: string;
+  avaliacaoDescricao: string;
+  avaliacaoData: string;
+  alunoId: string;
+  alunoMatricula: string;
+  alunoEmail: string;
+  questaoId: string;
+  tema: string;
+  enunciado: string;
+  respostaTexto: string;
+  nota?: number | null;
+  corrigido: boolean;
+}
+
+export async function listarCorrecoes(
+  professorId: string,
+  status: StatusCorrecao = "pendentes"
+): Promise<CorrecaoDissertativa[]> {
+  return fetchFromBackend(`/professores/${professorId}/correcoes?status=${status}`);
+}
+
+export async function corrigirRespostaProfessor(
+  professorId: string,
+  respostaId: string,
+  nota: number
+): Promise<void> {
+  const res = await fetch(`${API_URL}/professores/${professorId}/correcoes/${respostaId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ nota }),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao salvar nota: ${res.statusText} - ${errorText}`);
+  }
+}

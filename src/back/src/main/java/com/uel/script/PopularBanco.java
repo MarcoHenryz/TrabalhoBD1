@@ -95,11 +95,11 @@ public class PopularBanco {
         alunos.add(getOrCreateAluno(alunoService, usuarioService, "A0004", "aluno4@email.com"));
         alunos.add(getOrCreateAluno(alunoService, usuarioService, "A0005", "aluno5@email.com"));
 
-        alunoService.atualizarMedia(alunos.get(0).getId(), new BigDecimal("7.5"));
-        alunoService.atualizarMedia(alunos.get(1).getId(), new BigDecimal("8.2"));
-        alunoService.atualizarMedia(alunos.get(2).getId(), new BigDecimal("6.9"));
-        alunoService.atualizarMedia(alunos.get(3).getId(), new BigDecimal("8.7"));
-        alunoService.atualizarMedia(alunos.get(4).getId(), new BigDecimal("7.9"));
+        alunoService.atualizarMedia(alunos.get(0).getId(), new BigDecimal("6.8"));
+        alunoService.atualizarMedia(alunos.get(1).getId(), new BigDecimal("7.1"));
+        alunoService.atualizarMedia(alunos.get(2).getId(), new BigDecimal("6.4"));
+        alunoService.atualizarMedia(alunos.get(3).getId(), new BigDecimal("7.5"));
+        alunoService.atualizarMedia(alunos.get(4).getId(), new BigDecimal("6.9"));
 
         System.out.println("Professores: " + professor1.getId() + " e " + professor2.getId());
         System.out.println("Alunos criados: " + alunos.size());
@@ -362,70 +362,70 @@ public class PopularBanco {
         System.out.println("\nCriando 5 avaliações e vinculando questões...");
         Avaliacao avaliacao1 = avaliacaoService.criar(
             "Prova Fundamentos de Algoritmos",
-            LocalDate.now().plusDays(7),
+            LocalDate.now().minusDays(120),
             LocalTime.of(9, 0),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao2 = avaliacaoService.criar(
             "Prova Banco de Dados Aplicada",
-            LocalDate.now().plusDays(14),
+            LocalDate.now().minusDays(75),
             LocalTime.of(19, 0),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao3 = avaliacaoService.criar(
             "Prova Git e Modelagem de Dados",
-            LocalDate.now().plusDays(21),
+            LocalDate.now().minusDays(45),
             LocalTime.of(10, 30),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao4 = avaliacaoService.criar(
             "Revisão Integrada Algoritmos e BD",
-            LocalDate.now().plusDays(28),
+            LocalDate.now().minusDays(15),
             LocalTime.of(8, 30),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao5 = avaliacaoService.criar(
             "Prova SQL Consolidada",
-            LocalDate.now().plusDays(35),
+            LocalDate.now().plusDays(10),
             LocalTime.of(18, 30),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao6 = avaliacaoService.criar(
             "Estruturas I - Árvores e Hash",
-            LocalDate.now().plusDays(42),
+            LocalDate.now().plusDays(30),
             LocalTime.of(14, 0),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao7 = avaliacaoService.criar(
             "Estruturas II - Filas e Pilhas",
-            LocalDate.now().plusDays(49),
+            LocalDate.now().plusDays(60),
             LocalTime.of(16, 0),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao8 = avaliacaoService.criar(
             "SQL Avançado e Índices",
-            LocalDate.now().plusDays(56),
+            LocalDate.now().plusDays(90),
             LocalTime.of(9, 30),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao9 = avaliacaoService.criar(
             "Laboratório de Performance",
-            LocalDate.now().plusDays(63),
+            LocalDate.now().plusDays(120),
             LocalTime.of(11, 0),
             participacoes(alunos)
         );
 
         Avaliacao avaliacao10 = avaliacaoService.criar(
             "Revisão Final Integrada",
-            LocalDate.now().plusDays(70),
+            LocalDate.now().plusDays(150),
             LocalTime.of(19, 0),
             participacoes(alunos)
         );

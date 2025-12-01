@@ -35,6 +35,24 @@ export function App() {
     return prefersDark ? "dark" : "light";
   });
 
+  const getProfileStorageKey = (usuario: Usuario) => `notaki_profile_${usuario.id || usuario.email}`;
+
+  const carregarProfileSalvo = (usuario: Usuario): Partial<ProfileInfo> | null => {
+    if (typeof window === "undefined") return null;
+    const raw = window.localStorage.getItem(getProfileStorageKey(usuario));
+    if (!raw) return null;
+    try {
+      return JSON.parse(raw) as Partial<ProfileInfo>;
+    } catch {
+      return null;
+    }
+  };
+
+  const salvarProfile = (usuario: Usuario, data: ProfileInfo) => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(getProfileStorageKey(usuario), JSON.stringify(data));
+  };
+
   useEffect(() => {
     if (typeof document !== "undefined") {
       document.documentElement.classList.toggle("dark", theme === "dark");
@@ -50,7 +68,8 @@ export function App() {
       { key: "gerenciarQuestoes" as ProfessorSection, label: "Gerenciar Questões", todo: "Listagem e gerenciamento de questões" },
       { key: "provas" as ProfessorSection, label: "Criar provas", todo: "Montagem e agendamento de provas" },
       { key: "gerenciarAvaliacoes" as ProfessorSection, label: "Gerenciar Avaliações", todo: "Listagem e gerenciamento de avaliações" },
-      { key: "relatorios" as ProfessorSection, label: "Ver relatórios", todo: "TODO: relatórios de desempenho das turmas" },
+      { key: "correcoes" as ProfessorSection, label: "Corrigir questões", todo: "Acompanhe pendências dissertativas e lance notas" },
+      { key: "relatorios" as ProfessorSection, label: "Ver relatórios", todo: "Gráficos e comparativos entre alunos, provas e docentes" },
     ],
     [],
   );
@@ -76,7 +95,6 @@ export function App() {
     try {
       const usuario = await login(email, senha);
       setUsuarioLogado(usuario);
-      
       const baseProfile: ProfileInfo = {
         name: nomeAmigavel(usuario.email, usuario.professorId ? "Prof." : undefined),
         email: usuario.email,
@@ -84,7 +102,10 @@ export function App() {
         dept: usuario.professorId ? "Departamento X" : "Curso Y",
         avatar: null,
       };
-      setProfile(baseProfile);
+      const salvo = carregarProfileSalvo(usuario);
+      const finalProfile = salvo ? { ...baseProfile, ...salvo } : baseProfile;
+      setProfile(finalProfile);
+      salvarProfile(usuario, finalProfile);
       
       // Determina se é professor ou aluno baseado nos IDs
       if (usuario.professorId) {
@@ -110,7 +131,12 @@ export function App() {
   };
 
   const handleProfileUpdate = (data: { name?: string; avatar?: string | null }) => {
-    setProfile((prev) => (prev ? { ...prev, ...data, name: data.name ?? prev.name } : prev));
+    setProfile((prev) => {
+      if (!prev || !usuarioLogado) return prev;
+      const atualizado = { ...prev, ...data, name: data.name ?? prev.name };
+      salvarProfile(usuarioLogado, atualizado);
+      return atualizado;
+    });
   };
 
   const toggleTheme = () => setTheme((prev) => (prev === "dark" ? "light" : "dark"));

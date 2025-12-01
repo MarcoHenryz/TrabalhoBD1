@@ -410,3 +410,35 @@ error: script "dev" was terminated by signal SIGTERM (Polite quit request)
 $ bun --hot src/index.tsx
 🚀 Server running at http://localhost:3000/
 Bundled page in 777ms: src/index.html
+Reloaded in 128ms: src/lib/apiprof.ts + 1 more
+[x2] Reloaded in 174ms: src/views/ProfessorView.tsx + 1 more
+[x3] Reloaded in 110ms: src/App.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 1040ms: src/index.html
+Reloaded in 82ms: src/lib/apiprof.ts + 1 more
+10 | import { CorrecaoQuestoes } from "@/components/professor/CorrecaoQuestoes";
+                                      ^
+error: Could not resolve: "@/components/professor/CorrecaoQuestoes". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/ProfessorView.tsx:10:34
+10 | import { CorrecaoQuestoes } from "@/components/professor/CorrecaoQuestoes";
+                                      ^
+error: Could not resolve: "@/components/professor/CorrecaoQuestoes". Maybe you need to "bun install"?
+    at /home/roger/uel/banco/notaki/src/front/src/views/ProfessorView.tsx:10:34
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 760ms: src/index.html
+Reloaded in 104ms: src/components/professor/RelatoriosProfessor.tsx + 1 more
+[x2] Reloaded in 103ms: src/App.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 679ms: src/index.html
+Reloaded in 96ms: src/components/professor/RelatoriosProfessor.tsx + 1 more
+[x2] Reloaded in 98ms: src/components/professor/RelatoriosProfessor.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 866ms: src/index.html

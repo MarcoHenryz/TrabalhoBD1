@@ -5,6 +5,7 @@ import com.uel.entity.Questao;
 import com.uel.entity.RespostaAluno;
 import com.uel.entity.Vouf;
 import com.uel.enums.TipoQuestao;
+import com.uel.dto.CorrecaoDissertativaDTO;
 import com.uel.repository.AlternativaRepository;
 import com.uel.repository.QuestaoRepository;
 import com.uel.repository.RespostaAlunoRepository;
@@ -182,5 +183,37 @@ public class RespostaAlunoService {
                 BigDecimal.valueOf(questoesCorrigidas),
                 2,
                 java.math.RoundingMode.HALF_UP).multiply(BigDecimal.TEN);
+    }
+
+    public List<CorrecaoDissertativaDTO> listarParaCorrecao(UUID professorId, Boolean corrigido) throws SQLException {
+        return respostaAlunoRepository.listarParaCorrecao(professorId, corrigido);
+    }
+
+    public void corrigirDissertativaComoProfessor(UUID respostaId, UUID professorId, BigDecimal notaDeZeroADez)
+            throws SQLException {
+        if (notaDeZeroADez == null ||
+                notaDeZeroADez.compareTo(BigDecimal.ZERO) < 0 ||
+                notaDeZeroADez.compareTo(BigDecimal.TEN) > 0) {
+            throw new IllegalArgumentException("Nota deve estar entre 0 e 10");
+        }
+
+        RespostaAluno resposta = respostaAlunoRepository.buscarPorId(respostaId);
+
+        if (resposta == null) {
+            throw new IllegalArgumentException("Resposta não encontrada");
+        }
+
+        Questao questao = questaoRepository.buscarPorId(resposta.getQuestaoId());
+        if (questao.getTipo() != TipoQuestao.DISSERTATIVA) {
+            throw new IllegalArgumentException("Apenas questões dissertativas podem ser corrigidas manualmente");
+        }
+        if (questao.getProfessorId() == null || !questao.getProfessorId().equals(professorId)) {
+            throw new IllegalArgumentException("Resposta não pertence às suas questões");
+        }
+
+        BigDecimal notaNormalizada = notaDeZeroADez.divide(BigDecimal.TEN, 2, java.math.RoundingMode.HALF_UP);
+        resposta.setNota(notaNormalizada);
+        resposta.setCorrigido(true);
+        respostaAlunoRepository.atualizar(resposta);
     }
 }

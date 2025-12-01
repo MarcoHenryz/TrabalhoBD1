@@ -6,9 +6,17 @@ import { CriarQuestaoForm } from "@/components/forms/CriarQuestaoForm";
 import { NovaAvaliacaoForm } from "@/components/forms/NovaAvaliacaoForm";
 import { GerenciarAvaliacoes } from "@/components/forms/GerenciarAvaliacoes";
 import { GerenciarQuestoes } from "@/components/forms/GerenciarQuestoes";
+import { RelatoriosProfessor } from "@/components/professor/RelatoriosProfessor";
+import { CorrecaoQuestoes } from "@/components/professor/CorrecaoQuestoes";
 import { useState } from "react";
 
-export type ProfessorSection = "questoes" | "gerenciarQuestoes" | "provas" | "gerenciarAvaliacoes" | "relatorios";
+export type ProfessorSection =
+  | "questoes"
+  | "gerenciarQuestoes"
+  | "provas"
+  | "gerenciarAvaliacoes"
+  | "correcoes"
+  | "relatorios";
 
 type ProfessorNavItem = {
   key: ProfessorSection;
@@ -161,6 +169,10 @@ export function ProfessorView({
             refreshTrigger={refreshTrigger}
           />
         </div>
+      ) : activeSection === "correcoes" ? (
+        <CorrecaoQuestoes professorId={professorId} />
+      ) : activeSection === "relatorios" ? (
+        <RelatoriosProfessor professorId={professorId} />
       ) : (
         <Card className="w-full">
           <CardHeader className="gap-2">
