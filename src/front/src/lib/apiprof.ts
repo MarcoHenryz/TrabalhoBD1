@@ -121,11 +121,13 @@ export async function buscarQuestaoPorId(id: string): Promise<Questao> {
 }
 
 export interface AlternativaResponse {
+  id: string;
   alternativa: string;
   verdadeiro: boolean;
 }
 
 export interface VoufResponse {
+  id: string;
   item: string;
   verdadeiro: boolean;
 }
@@ -334,4 +336,50 @@ export async function desassociarAlunoAvaliacao(avaliacaoId: string, alunoId: st
     const errorText = await res.text();
     throw new Error(`Erro ao desassociar aluno: ${res.statusText} - ${errorText}`);
   }
+}
+
+// Interfaces e funções para Respostas de Alunos
+export interface RespostaAluno {
+  id: string;
+  avaliacaoId: string;
+  alunoId: string;
+  questaoId: string;
+  alternativaEscolhidaId?: string | null;
+  voufItemId?: string | null;
+  voufResposta?: boolean | null;
+  respostaTexto?: string | null;
+  nota?: number | null;
+  corrigido?: boolean;
+  respondidoEm?: string | null;
+}
+
+export interface ResponderQuestaoRequest {
+  avaliacaoId: string;
+  alunoId: string;
+  questaoId: string;
+  alternativaEscolhidaId?: string | null;
+  voufItemId?: string | null;
+  voufResposta?: boolean | null;
+  respostaTexto?: string | null;
+}
+
+export async function listarRespostasAluno(avaliacaoId: string, alunoId: string): Promise<RespostaAluno[]> {
+  return fetchFromBackend(`/respostas/avaliacao/${avaliacaoId}/aluno/${alunoId}`);
+}
+
+export async function responderQuestao(request: ResponderQuestaoRequest): Promise<RespostaAluno> {
+  const res = await fetch(`${API_URL}/respostas`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(`Erro ao enviar resposta: ${res.statusText} - ${errorText}`);
+  }
+
+  return res.json();
 }

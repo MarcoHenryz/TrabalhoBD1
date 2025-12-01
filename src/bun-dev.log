@@ -24,3 +24,15 @@ error: script "dev" was terminated by signal SIGTERM (Polite quit request)
 $ bun --hot src/index.tsx
 🚀 Server running at http://localhost:3000/
 Bundled page in 771ms: src/index.html
+Reloaded in 120ms: src/lib/apiprof.ts + 1 more
+[x2] Reloaded in 91ms: src/lib/apiprof.ts + 1 more
+[x3] Reloaded in 114ms: src/views/AlunoView.tsx + 1 more
+[x4] Reloaded in 91ms: src/App.tsx + 1 more
+[x5] Reloaded in 82ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x6] Reloaded in 83ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x7] Reloaded in 93ms: src/components/aluno/ProvasAluno.tsx + 1 more
+[x8] Reloaded in 84ms: src/components/aluno/ProvasAluno.tsx + 1 more
+error: script "dev" was terminated by signal SIGTERM (Polite quit request)
+$ bun --hot src/index.tsx
+🚀 Server running at http://localhost:3000/
+Bundled page in 752ms: src/index.html

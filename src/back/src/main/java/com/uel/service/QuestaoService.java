@@ -82,6 +82,7 @@ public class QuestaoService {
         List<com.uel.entity.Alternativa> alternativas = alternativaRepository.buscarPorQuestaoId(questaoId);
         return alternativas.stream()
                 .map(alt -> new com.uel.controller.QuestaoController.AlternativaResponse(
+                        alt.getId(),
                         alt.getAlternativa(),
                         alt.getVerdadeiro()))
                 .toList();
@@ -91,6 +92,7 @@ public class QuestaoService {
         List<com.uel.entity.Vouf> itens = voufRepository.buscarPorQuestaoId(questaoId);
         return itens.stream()
                 .map(item -> new com.uel.controller.QuestaoController.VoufResponse(
+                        item.getId(),
                         item.getItem(),
                         item.getVerdadeiro()))
                 .toList();

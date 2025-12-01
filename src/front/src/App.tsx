@@ -11,7 +11,7 @@ type View = "login" | "professor" | "aluno";
 export function App() {
   const [view, setView] = useState<View>("login");
   const [professorSection, setProfessorSection] = useState<ProfessorSection>("questoes");
-  const [alunoTab, setAlunoTab] = useState<AlunoTab>("disciplinas");
+  const [alunoTab, setAlunoTab] = useState<AlunoTab>("provasPendentes");
   const [usuarioLogado, setUsuarioLogado] = useState<Usuario | null>(null);
   const [erroLogin, setErroLogin] = useState<string | null>(null);
 
@@ -29,7 +29,7 @@ export function App() {
   const alunoNav = useMemo(
     () => [
       { key: "disciplinas" as AlunoTab, label: "Disciplinas matriculadas", todo: "TODO: listar disciplinas e docentes" },
-      { key: "provasPendentes" as AlunoTab, label: "Provas pendentes", todo: "TODO: prazos e status das próximas provas" },
+      { key: "provasPendentes" as AlunoTab, label: "Provas pendentes", todo: "Responda as avaliações disponíveis para você" },
       { key: "notas" as AlunoTab, label: "Notas", todo: "TODO: notas recentes e histórico" },
       { key: "relatorios" as AlunoTab, label: "Relatórios", todo: "TODO: relatórios individuais de progresso" },
     ],
@@ -64,7 +64,7 @@ export function App() {
   const handleLogout = () => {
     setView("login");
     setProfessorSection("questoes");
-    setAlunoTab("disciplinas");
+    setAlunoTab("provasPendentes");
     setUsuarioLogado(null);
     setErroLogin(null);
   };
@@ -98,7 +98,14 @@ export function App() {
     };
 
     return (
-      <AlunoView navItems={alunoNav} activeTab={alunoTab} onSelectTab={setAlunoTab} profile={profile} onLogout={handleLogout} />
+      <AlunoView
+        navItems={alunoNav}
+        activeTab={alunoTab}
+        onSelectTab={setAlunoTab}
+        profile={profile}
+        onLogout={handleLogout}
+        alunoId={usuarioLogado.alunoId!}
+      />
     );
   }
 
